@@ -1,6 +1,7 @@
 
 # Set the language to Rust
 language: rust
+sudo: required
 
 # Enable testing on Linux and Mac
 os:
