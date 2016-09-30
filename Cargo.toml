@@ -11,4 +11,3 @@ crate-type = ["rlib"]
 
 [dependencies]
 num-traits   = "*"
-

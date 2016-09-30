@@ -26,4 +26,3 @@ mod vec4;
 // Module imports
 pub use self::vec2::{Vec2, Vec2f, Vec2i, Vec2u};
 pub use self::vec3::{Vec3, Vec3f, Vec3i, Vec3u};
-

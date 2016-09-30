@@ -582,4 +582,3 @@ impl<V> Vec3<V> where V: Float {
         Vec3::<V>::zero ()
     }
 }
-

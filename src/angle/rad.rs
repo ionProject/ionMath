@@ -67,4 +67,3 @@ impl<V> Rad<V> where V: Copy + Float + NumCast {
         Rad {value: value}
     }
 }
-

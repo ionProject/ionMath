@@ -500,4 +500,3 @@ impl<V> Vec2<V> where V: Float {
         Vec2::<V>::zero ()
     }
 }
-

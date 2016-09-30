@@ -25,4 +25,3 @@ mod rad;
 // Module imports
 pub use self::deg::Deg;
 pub use self::rad::Rad;
-

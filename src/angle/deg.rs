@@ -67,4 +67,3 @@ impl<V> Deg<V> where V: Copy + Float + NumCast {
         Deg {value: value}
     }
 }
-
