@@ -37,7 +37,7 @@ use std::convert::From;
 ///
 /// It is used for 3D transformations and graphics.
 /// It can accept any number as a value.
-#[derive (Copy, Clone, Debug, Default, PartialEq)]
+#[derive (Copy, Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
 pub struct Vec3<V> where
     V: Copy + Num + NumCast {
 

@@ -29,8 +29,13 @@
 /*===============================================================================================*/
 
 // Crate attributes
-#![deny (missing_debug_implementations)]
-#![deny (missing_docs)]
+#![deny    (missing_debug_implementations)]
+#![deny    (missing_docs)]
+#![feature (rustc_macro)]
+
+// Crate imports
+#[macro_use]
+extern crate serde_derive;
 
 // Modules
 pub mod angle;

@@ -29,7 +29,7 @@ use std::convert::From;
 /*===============================================================================================*/
 
 /// Stores a value in Degrees.
-#[derive (Copy, Clone, Debug, Default)]
+#[derive (Copy, Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Deg<V> where
     V: Copy + Float + NumCast {
 
