@@ -39,7 +39,8 @@ use std::convert::From;
 /// UV coordinates, etc. <br>
 /// It can accept any number as a value.
 #[derive (Copy, Clone, Debug, Default, PartialEq)]
-pub struct Vec2<V> where V: Copy + Num + NumCast {
+pub struct Vec2<V> where
+    V: Copy + Num + NumCast {
 
     // Public
     /// The vector x-coordinate.
@@ -60,9 +61,9 @@ pub type Vec2u = Vec2<u32>;
 /*------VEC2 TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V, U> From<Vec3<U>> for Vec2<V>
-    where V: Copy + Num + NumCast,
-          U: Copy + Num + NumCast {
+impl<V, U> From<Vec3<U>> for Vec2<V> where
+    V: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
 
     fn from (value: Vec3<U>) -> Vec2<V> {
 
@@ -75,7 +76,8 @@ impl<V, U> From<Vec3<U>> for Vec2<V>
 /*------VEC2 OPERATORS---------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V> Add for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> Add for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     type Output = Vec2<V>;
 
@@ -88,7 +90,8 @@ impl<V> Add for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> Add<V> for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> Add<V> for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     type Output = Vec2<V>;
 
@@ -101,7 +104,8 @@ impl<V> Add<V> for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> AddAssign for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> AddAssign for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     fn add_assign (&mut self, rhs: Vec2<V>) {
 
@@ -112,7 +116,8 @@ impl<V> AddAssign for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> AddAssign<V> for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> AddAssign<V> for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     fn add_assign (&mut self, rhs: V) {
 
@@ -123,7 +128,8 @@ impl<V> AddAssign<V> for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> Sub for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> Sub for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     type Output = Vec2<V>;
 
@@ -136,7 +142,8 @@ impl<V> Sub for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> Sub<V> for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> Sub<V> for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     type Output = Vec2<V>;
 
@@ -149,7 +156,8 @@ impl<V> Sub<V> for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> SubAssign for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> SubAssign for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     fn sub_assign (&mut self, rhs: Vec2<V>) {
 
@@ -160,7 +168,8 @@ impl<V> SubAssign for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> SubAssign<V> for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> SubAssign<V> for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     fn sub_assign (&mut self, rhs: V) {
 
@@ -171,7 +180,8 @@ impl<V> SubAssign<V> for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> Mul for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> Mul for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     type Output = Vec2<V>;
 
@@ -184,7 +194,8 @@ impl<V> Mul for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> Mul<V> for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> Mul<V> for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     type Output = Vec2<V>;
 
@@ -197,7 +208,8 @@ impl<V> Mul<V> for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> MulAssign for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> MulAssign for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     fn mul_assign (&mut self, rhs: Vec2<V>) {
 
@@ -208,7 +220,8 @@ impl<V> MulAssign for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> MulAssign<V> for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> MulAssign<V> for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     fn mul_assign (&mut self, rhs: V) {
 
@@ -219,7 +232,8 @@ impl<V> MulAssign<V> for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> Div for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> Div for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     type Output = Vec2<V>;
 
@@ -232,7 +246,8 @@ impl<V> Div for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> Div<V> for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> Div<V> for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     type Output = Vec2<V>;
 
@@ -245,7 +260,8 @@ impl<V> Div<V> for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> DivAssign for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> DivAssign for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     fn div_assign (&mut self, rhs: Vec2<V>) {
 
@@ -256,7 +272,8 @@ impl<V> DivAssign for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> DivAssign<V> for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> DivAssign<V> for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     fn div_assign (&mut self, rhs: V) {
 
@@ -267,7 +284,8 @@ impl<V> DivAssign<V> for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> Index<u8> for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> Index<u8> for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     type Output = V;
 
@@ -284,7 +302,8 @@ impl<V> Index<u8> for Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> IndexMut<u8> for Vec2<V> where V: Copy + Num + NumCast {
+impl<V> IndexMut<u8> for Vec2<V> where
+    V: Copy + Num + NumCast {
 
     fn index_mut (&mut self, index: u8) -> &mut V {
 
@@ -301,7 +320,8 @@ impl<V> IndexMut<u8> for Vec2<V> where V: Copy + Num + NumCast {
 /*------VEC2 PUBLIC METHODS----------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V> Vec2<V> where V: Copy + Num + NumCast {
+impl<V> Vec2<V> where
+    V: Copy + Num + NumCast {
 
     /// Converts self into an instance of `Vec2<C>`.
     ///
@@ -311,7 +331,8 @@ impl<V> Vec2<V> where V: Copy + Num + NumCast {
     /// let vec01: Vec2<f32> = Vec2::new (4.3, 9.8);
     /// let vec02: Vec2<i32> = vec01.into ();
     /// ```
-    pub fn into<C> (self) -> Vec2<C> where C: Copy + Num + NumCast {
+    pub fn into<C> (self) -> Vec2<C> where
+        C: Copy + Num + NumCast {
 
         Vec2::new (C::from (self.x).unwrap (),
                    C::from (self.y).unwrap ())
@@ -360,7 +381,8 @@ impl<V> Vec2<V> where V: Copy + Num + NumCast {
     /// let vec01: Vec2<f32> = Vec2::new  (3.2, 9.8);
     /// let vec02: Vec2<i32> = Vec2::from (vec01);
     /// ```
-    pub fn from<C> (value: Vec2<C>) -> Vec2<V> where C: Copy + Num + NumCast {
+    pub fn from<C> (value: Vec2<C>) -> Vec2<V> where
+        C: Copy + Num + NumCast {
 
         Vec2::new (V::from (value.x).unwrap (),
                    V::from (value.y).unwrap ())
@@ -444,7 +466,8 @@ impl<V> Vec2<V> where V: Copy + Num + NumCast {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> Vec2<V> where V: Float {
+impl<V> Vec2<V> where
+    V: Float {
 
     /// Returns the distance between two vectors.
     ///

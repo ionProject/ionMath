@@ -30,7 +30,8 @@ use std::convert::From;
 
 /// Stores a value in Radians.
 #[derive (Copy, Clone, Debug, Default)]
-pub struct Rad<V> where V: Copy + Float + NumCast {
+pub struct Rad<V> where
+    V: Copy + Float + NumCast {
 
     // Public
     /// The value of the radian.
@@ -41,7 +42,8 @@ pub struct Rad<V> where V: Copy + Float + NumCast {
 /*------RAD TRAIT IMPLEMENTATIONS----------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V> From<Deg<V>> for Rad<V> where V: Copy + Float + NumCast {
+impl<V> From<Deg<V>> for Rad<V> where
+    V: Copy + Float + NumCast {
 
     fn from (deg: Deg<V>) -> Rad<V> {
 
@@ -53,7 +55,8 @@ impl<V> From<Deg<V>> for Rad<V> where V: Copy + Float + NumCast {
 /*------RAD PUBLIC METHODS-----------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V> Rad<V> where V: Copy + Float + NumCast {
+impl<V> Rad<V> where
+    V: Copy + Float + NumCast {
 
     /// Returns a new `Rad` instance.
     ///

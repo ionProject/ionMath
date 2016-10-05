@@ -30,7 +30,8 @@ use std::convert::From;
 
 /// Stores a value in Degrees.
 #[derive (Copy, Clone, Debug, Default)]
-pub struct Deg<V> where V: Copy + Float + NumCast {
+pub struct Deg<V> where
+    V: Copy + Float + NumCast {
 
     // Public
     /// The value of the degree.
@@ -41,7 +42,8 @@ pub struct Deg<V> where V: Copy + Float + NumCast {
 /*------DEG TRAIT IMPLEMENTATIONS----------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V> From<Rad<V>> for Deg<V> where V: Copy + Float + NumCast {
+impl<V> From<Rad<V>> for Deg<V> where
+    V: Copy + Float + NumCast {
 
     fn from (rad: Rad<V>) -> Deg<V> {
 
@@ -53,7 +55,8 @@ impl<V> From<Rad<V>> for Deg<V> where V: Copy + Float + NumCast {
 /*------DEG PUBLIC METHODS-----------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V> Deg<V> where V: Copy + Float + NumCast {
+impl<V> Deg<V> where
+    V: Copy + Float + NumCast {
 
     /// Returns a new `Deg` instance.
     ///
