@@ -18,11 +18,4 @@ matrix:
 #   allow_failures:
 #       - rust: nightly
 
-# The build script
-script: |
-
-    # Build 'ion_math'
-    cd $TRAVIS_BUILD_DIR/ion_math
-    cargo build --verbose
-    cargo test --verbose
 
