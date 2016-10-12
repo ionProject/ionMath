@@ -31,7 +31,7 @@
 // Crate attributes
 #![deny    (missing_debug_implementations)]
 #![deny    (missing_docs)]
-#![feature (rustc_macro)]
+#![feature (proc_macro)]
 
 // Crate imports
 #[macro_use]
