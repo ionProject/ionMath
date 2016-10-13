@@ -40,6 +40,8 @@ impl<T> Clamp for T where
 
     fn clamp (self, min: Self, max: Self) -> Self {
 
+        debug_assert! (min < max, "Min cannot be greater than max.");
+
         if self < min {return min}
         if self > max {return max}
         self
