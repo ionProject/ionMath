@@ -21,6 +21,7 @@ extern crate num_traits;
 use self::num_traits::{Float, NumCast};
 
 use ::angle::Rad;
+use ::util::Clamp;
 
 use std::convert::From;
 
@@ -29,7 +30,7 @@ use std::convert::From;
 /*===============================================================================================*/
 
 /// Stores a value in Degrees.
-#[derive (Copy, Clone, Debug, Default, Deserialize, Serialize)]
+#[derive (Copy, Clone, Debug, Default, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Deg<V> where
     V: Copy + Float + NumCast {
 
@@ -41,6 +42,21 @@ pub struct Deg<V> where
 /*===============================================================================================*/
 /*------DEG TRAIT IMPLEMENTATIONS----------------------------------------------------------------*/
 /*===============================================================================================*/
+
+impl<V> Clamp for Deg<V> where
+    V: Float {
+
+    fn clamp (self, min: Self, max: Self) -> Self {
+
+        debug_assert! (min < max, "Min cannot be greater than max.");
+
+        if self < min {return min}
+        if self > max {return max}
+        self
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
 
 impl<V> From<Rad<V>> for Deg<V> where
     V: Copy + Float + NumCast {
