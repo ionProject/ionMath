@@ -21,6 +21,7 @@ extern crate num_traits;
 use self::num_traits::{Float, Num, NumCast};
 
 use ::vector::Vec3;
+use ::util::Clamp;
 
 use std::ops::{Add,   AddAssign,
                Sub,   SubAssign,
@@ -60,6 +61,23 @@ pub type Vec2u = Vec2<u32>;
 /*===============================================================================================*/
 /*------VEC2 TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
 /*===============================================================================================*/
+
+impl<V> Clamp for Vec2<V> where
+    V: Copy + Num + NumCast + PartialOrd {
+
+    fn clamp (self, min: Self, max: Self) -> Self {
+
+        debug_assert! (min.x < max.x, "Min cannot be greater than max.");
+        debug_assert! (min.y < max.y, "Min cannot be greater than max.");
+
+        let xval = if self.x < min.x {min.x} else if self.x > max.x {max.x} else {self.x};
+        let yval = if self.y < min.y {min.y} else if self.y > max.y {max.y} else {self.y};
+
+        Vec2::new (xval, yval)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
 
 impl<V, U> From<Vec3<U>> for Vec2<V> where
     V: Copy + Num + NumCast,
