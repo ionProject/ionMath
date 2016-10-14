@@ -22,6 +22,7 @@ use self::num_traits::{Float, Num, NumCast};
 
 use ::vector::Vec3;
 use ::util::Clamp;
+use ::util::Lerp;
 
 use std::ops::{Add,   AddAssign,
                Sub,   SubAssign,
@@ -87,6 +88,26 @@ impl<V, U> From<Vec3<U>> for Vec2<V> where
 
         Vec2::new (V::from (value.x).unwrap (),
                    V::from (value.y).unwrap ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<V> Lerp for Vec2<V> where
+    V: Copy + Num + NumCast {
+
+    fn lerp (start: Self, end: Self, percentage: f32) -> Self {
+
+        Vec2::new (V::lerp (start.x, end.x, percentage),
+                   V::lerp (start.y, end.y, percentage))
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn lerp_unclamped (start: Self, end: Self, percentage: f32) -> Self {
+
+        Vec2::new (V::lerp_unclamped (start.x, end.x, percentage),
+                   V::lerp_unclamped (start.y, end.y, percentage))
     }
 }
 
