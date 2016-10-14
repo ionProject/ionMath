@@ -20,6 +20,8 @@
 
 // Modules
 mod clamp;
+mod lerp;
 
 // Module imports
 pub use self::clamp::*;
+pub use self::lerp::*;
