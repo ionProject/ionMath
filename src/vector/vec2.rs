@@ -20,7 +20,7 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Float, Num, NumCast};
 
-use ::vector::Vec3;
+use ::vector::{Vec3, Vec4};
 use ::util::{Clamp, Lerp, MinMax};
 
 use std::ops::{Add,   AddAssign,
@@ -84,6 +84,19 @@ impl<V, U> From<Vec3<U>> for Vec2<V> where
     U: Copy + Num + NumCast {
 
     fn from (value: Vec3<U>) -> Vec2<V> {
+
+        Vec2::new (V::from (value.x).unwrap (),
+                   V::from (value.y).unwrap ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<V, U> From<Vec4<U>> for Vec2<V> where
+    V: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: Vec4<U>) -> Vec2<V> {
 
         Vec2::new (V::from (value.x).unwrap (),
                    V::from (value.y).unwrap ())
@@ -457,8 +470,8 @@ impl<V> Vec2<V> where
     /// ```
     pub fn zero () -> Vec2<V> {
 
-        Vec2 {x: V::zero (),
-              y: V::zero ()}
+        Vec2::new (V::zero (),
+                   V::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -472,8 +485,8 @@ impl<V> Vec2<V> where
     /// ```
     pub fn up () -> Vec2<V> {
 
-        Vec2 {x: V::zero (),
-              y: V::one  ()}
+        Vec2::new (V::zero (),
+                   V::one  ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -487,8 +500,8 @@ impl<V> Vec2<V> where
     /// ```
     pub fn down () -> Vec2<V> {
 
-        Vec2 {x: V::zero (),
-              y: V::from (-1).unwrap ()}
+        Vec2::new (V::zero (),
+                   V::from (-1).unwrap ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -502,8 +515,8 @@ impl<V> Vec2<V> where
     /// ```
     pub fn right () -> Vec2<V> {
 
-        Vec2 {x: V::one  (),
-              y: V::zero ()}
+        Vec2::new (V::one  (),
+                   V::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -517,8 +530,8 @@ impl<V> Vec2<V> where
     /// ```
     pub fn left () -> Vec2<V> {
 
-        Vec2 {x: V::from (-1).unwrap (),
-              y: V::zero ()}
+        Vec2::new (V::from (-1).unwrap (),
+                   V::zero ())
     }
 }
 
@@ -574,10 +587,10 @@ impl<V> Vec2<V> where
 
         if length != V::zero () {
 
-            return Vec2::<V>::new (self.x / length,
-                                   self.y / length);
+            return Vec2::new (self.x / length,
+                              self.y / length);
         }
 
-        Vec2::<V>::zero ()
+        Vec2::zero ()
     }
 }

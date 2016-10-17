@@ -20,7 +20,7 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Float, Num, NumCast};
 
-use ::vector::Vec2;
+use ::vector::{Vec2, Vec4};
 use ::util::{Clamp, Lerp, MinMax};
 
 use std::ops::{Add,   AddAssign,
@@ -91,6 +91,20 @@ impl<V, U> From<Vec2<U>> for Vec3<V> where
         Vec3::new (V::from (value.x).unwrap (),
                    V::from (value.y).unwrap (),
                    V::zero ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<V, U> From<Vec4<U>> for Vec3<V> where
+    V: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: Vec4<U>) -> Vec3<V> {
+
+        Vec3::new (V::from (value.x).unwrap (),
+                   V::from (value.y).unwrap (),
+                   V::from (value.z).unwrap ())
     }
 }
 
@@ -506,9 +520,9 @@ impl<V> Vec3<V> where
     /// ```
     pub fn zero () -> Vec3<V> {
 
-        Vec3 {x: V::zero (),
-              y: V::zero (),
-              z: V::zero ()}
+        Vec3::new (V::zero (),
+                   V::zero (),
+                   V::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -522,9 +536,9 @@ impl<V> Vec3<V> where
     /// ```
     pub fn up () -> Vec3<V> {
 
-        Vec3 {x: V::zero (),
-              y: V::one  (),
-              z: V::zero ()}
+        Vec3::new (V::zero (),
+                   V::one  (),
+                   V::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -538,9 +552,9 @@ impl<V> Vec3<V> where
     /// ```
     pub fn down () -> Vec3<V> {
 
-        Vec3 {x: V::zero (),
-              y: V::from (-1).unwrap (),
-              z: V::zero ()}
+        Vec3::new (V::zero (),
+                   V::from (-1).unwrap (),
+                   V::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -554,9 +568,9 @@ impl<V> Vec3<V> where
     /// ```
     pub fn right () -> Vec3<V> {
 
-        Vec3 {x: V::one  (),
-              y: V::zero (),
-              z: V::zero ()}
+        Vec3::new (V::one  (),
+                   V::zero (),
+                   V::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -570,9 +584,9 @@ impl<V> Vec3<V> where
     /// ```
     pub fn left () -> Vec3<V> {
 
-        Vec3 {x: V::from (-1).unwrap (),
-              y: V::zero (),
-              z: V::zero ()}
+        Vec3::new (V::from (-1).unwrap (),
+                   V::zero (),
+                   V::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -586,9 +600,9 @@ impl<V> Vec3<V> where
     /// ```
     pub fn forward () -> Vec3<V> {
 
-        Vec3 {x: V::zero (),
-              y: V::zero (),
-              z: V::one  ()}
+        Vec3::new (V::zero (),
+                   V::zero (),
+                   V::one  ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -602,9 +616,9 @@ impl<V> Vec3<V> where
     /// ```
     pub fn back () -> Vec3<V> {
 
-        Vec3 {x: V::zero (),
-              y: V::zero (),
-              z: V::from (-1).unwrap ()}
+        Vec3::new (V::zero (),
+                   V::zero (),
+                   V::from (-1).unwrap ())
     }
 }
 
@@ -661,11 +675,11 @@ impl<V> Vec3<V> where
 
         if length != V::zero () {
 
-            return Vec3::<V>::new (self.x / length,
-                                   self.y / length,
-                                   self.z / length);
+            return Vec3::new (self.x / length,
+                              self.y / length,
+                              self.z / length);
         }
 
-        Vec3::<V>::zero ()
+        Vec3::zero ()
     }
 }
