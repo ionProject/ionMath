@@ -22,6 +22,8 @@ use self::num_traits::{Num, NumCast};
 
 use ::vector::Vec4;
 
+use std::convert::From;
+
 /*===============================================================================================*/
 /*------MAT4 STRUCT------------------------------------------------------------------------------*/
 /*===============================================================================================*/
@@ -44,6 +46,36 @@ pub type Mat4f = Mat4<f32>;
 pub type Mat4i = Mat4<i32>;
 /// `Mat4<u32>`
 pub type Mat4u = Mat4<u32>;
+
+/*===============================================================================================*/
+/*------MAT3 TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
+/*===============================================================================================*/
+
+impl<T> From<T> for Mat4<T> where
+    T: Copy + Num + NumCast {
+
+    fn from (value: T) -> Self {
+
+        Mat4::new (value, value, value, value,
+                   value, value, value, value,
+                   value, value, value, value,
+                   value, value, value, value)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> From<[Vec4<T>; 4]> for Mat4<T> where
+    T: Copy + Num + NumCast {
+
+    fn from (value: [Vec4<T>; 4]) -> Self {
+
+        Mat4 {array: [value[0],
+                      value[1],
+                      value[2],
+                      value[3]]}
+    }
+}
 
 /*===============================================================================================*/
 /*------MAT4 PUBLIC METHODS----------------------------------------------------------------------*/
@@ -71,5 +103,36 @@ impl<T> Mat4<T> where
                       Vec4::new (m12, m22, m32, m42),
                       Vec4::new (m13, m23, m33, m43),
                       Vec4::new (m14, m24, m34, m44)]}
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns a new identity matrix.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::matrix::Mat4;
+    /// let mat = Mat4::<f32>::identity ();
+    /// ```
+    pub fn identity () -> Self {
+
+        Mat4::new (T::one  (), T::zero (), T::zero (), T::zero (),
+                   T::zero (), T::one  (), T::zero (), T::zero (),
+                   T::zero (), T::zero (), T::one  (), T::zero (),
+                   T::zero (), T::zero (), T::zero (), T::one  ())
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns a matrix with all zeros.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::matrix::Mat4;
+    /// let mat = Mat4::<f32>::zero ();
+    /// ```
+    pub fn zero () -> Self {
+
+        Mat4::from (T::zero ())
     }
 }
