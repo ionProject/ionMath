@@ -21,7 +21,9 @@
 // Modules
 mod clamp;
 mod lerp;
+mod min_max;
 
 // Module imports
 pub use self::clamp::*;
 pub use self::lerp::*;
+pub use self::min_max::*;

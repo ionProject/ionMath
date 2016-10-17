@@ -21,8 +21,7 @@ extern crate num_traits;
 use self::num_traits::{Float, Num, NumCast};
 
 use ::vector::Vec3;
-use ::util::Clamp;
-use ::util::Lerp;
+use ::util::{Clamp, Lerp, MinMax};
 
 use std::ops::{Add,   AddAssign,
                Sub,   SubAssign,
@@ -108,6 +107,26 @@ impl<V> Lerp for Vec2<V> where
 
         Vec2::new (V::lerp_unclamped (start.x, end.x, percentage),
                    V::lerp_unclamped (start.y, end.y, percentage))
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<V> MinMax for Vec2<V> where
+    V: Copy + Num + NumCast + PartialOrd {
+
+    fn max (lhs: Self, rhs: Self) -> Self {
+
+        Vec2::new (V::max (lhs.x, rhs.x),
+                   V::max (lhs.y, rhs.y))
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn min (lhs: Self, rhs: Self) -> Self {
+
+        Vec2::new (V::min (lhs.x, rhs.x),
+                   V::min (lhs.y, rhs.y))
     }
 }
 
