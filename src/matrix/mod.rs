@@ -17,3 +17,11 @@
 /*===============================================================================================*/
 //! TODO: Add module documentation.
 /*===============================================================================================*/
+
+// Modules
+mod mat3;
+mod mat4;
+
+// Module imports
+pub use self::mat3::{Mat3, Mat3f, Mat3i, Mat3u};
+pub use self::mat4::{Mat4, Mat4f, Mat4i, Mat4u};
