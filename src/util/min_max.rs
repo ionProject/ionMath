@@ -55,21 +55,13 @@ impl<T> MinMax for T where
 
     fn max (lhs: Self, rhs: Self) -> Self {
 
-        if lhs > rhs {
-            return lhs;
-        }
-
-        rhs
+        if lhs > rhs {lhs} else {rhs}
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
     fn min (lhs: Self, rhs: Self) -> Self {
 
-        if lhs < rhs {
-            return lhs;
-        }
-
-        rhs
+        if lhs < rhs {lhs} else {rhs}
     }
 }
