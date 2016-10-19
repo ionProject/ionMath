@@ -29,9 +29,9 @@
 /*===============================================================================================*/
 
 // Crate attributes
-#![deny    (missing_debug_implementations)]
-#![deny    (missing_docs)]
-#![feature (proc_macro)]
+#![deny     (missing_debug_implementations)]
+#![deny     (missing_docs)]
+#![cfg_attr (feature = "serde_serialize", feature (proc_macro))]
 
 // Crate imports
 #[cfg (feature = "serde_serialize")]

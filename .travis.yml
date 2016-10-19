@@ -9,13 +9,13 @@ os:
 
 # Enable all version channels
 rust:
-#   - stable
-#   - beta
+    - stable
+    - beta
     - nightly
 
 # Allow failures on Rust nightly
 matrix:
-#   allow_failures:
-#       - rust: nightly
+    allow_failures:
+        - rust: nightly
 
 
