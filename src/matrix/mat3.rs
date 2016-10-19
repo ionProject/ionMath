@@ -23,6 +23,7 @@ use self::num_traits::{Num, NumCast};
 use ::vector::Vec3;
 
 use std::convert::From;
+use std::ops::{AddAssign, Index, IndexMut, Mul};
 
 /*===============================================================================================*/
 /*------mat3 STRUCT------------------------------------------------------------------------------*/
@@ -76,6 +77,69 @@ impl<T> From<[Vec3<T>; 3]> for Mat3<T> where
 }
 
 /*===============================================================================================*/
+/*------MAT3 OPERATORS---------------------------------------------------------------------------*/
+/*===============================================================================================*/
+
+impl<T> Mul for Mat3<T> where
+    T: AddAssign + Copy + Num + NumCast {
+
+    type Output = Self;
+
+    fn mul (self, rhs: Self) -> Self::Output {
+
+        let mut m = Mat3::zero ();
+
+        for row in 0..3 {
+
+            for col in 0..3 {
+
+                for inner in 0..3 {
+                    m[row][col] += self[row][inner] * rhs[inner][col]
+                }
+            }
+        }
+
+        m
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Index<u8> for Mat3<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec3<T>;
+
+    fn index (&self, index: u8) -> &Self::Output {
+
+        match index {
+
+            0 => &self.array[0],
+            1 => &self.array[1],
+            2 => &self.array[2],
+            _ => unreachable! ("Index out of range for Mat3")
+        }
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> IndexMut<u8> for Mat3<T> where
+    T: Copy + Num + NumCast {
+
+    fn index_mut (&mut self, index: u8) -> &mut Vec3<T> {
+
+        match index {
+
+            0 => &mut self.array[0],
+            1 => &mut self.array[1],
+            2 => &mut self.array[2],
+            _ => unreachable! ("Index out of range for Mat3")
+        }
+    }
+}
+
+/*===============================================================================================*/
 /*------MAT3 PUBLIC METHODS----------------------------------------------------------------------*/
 /*===============================================================================================*/
 
@@ -91,13 +155,13 @@ impl<T> Mat3<T> where
     ///                      4, 5, 6,
     ///                      7, 8, 9);
     /// ```
-    pub fn new (m11: T, m21: T, m31: T,
-                m12: T, m22: T, m32: T,
-                m13: T, m23: T, m33: T) -> Self {
+    pub fn new (m11: T, m12: T, m13: T,
+                m21: T, m22: T, m23: T,
+                m31: T, m32: T, m33: T) -> Self {
 
-        Mat3 {array: [Vec3::new (m11, m21, m31),
-                      Vec3::new (m12, m22, m32),
-                      Vec3::new (m13, m23, m33)]}
+        Mat3 {array: [Vec3::new (m11, m12, m13),
+                      Vec3::new (m21, m22, m23),
+                      Vec3::new (m31, m32, m33)]}
     }
 
 /*-----------------------------------------------------------------------------------------------*/
