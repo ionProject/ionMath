@@ -39,7 +39,8 @@ use std::convert::From;
 /// It is used mainly for 2D related mathematics such as texture coordinates,
 /// UV coordinates, etc. <br>
 /// It can accept any number as a value.
-#[derive (Copy, Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
+#[cfg_attr (feature = "serde_serialize", derive (Deserialize, Serialize))]
+#[derive (Copy, Clone, Debug, Default, PartialEq)]
 pub struct Vec2<V> where
     V: Copy + Num + NumCast {
 

@@ -35,7 +35,8 @@ use std::convert::From;
 /*===============================================================================================*/
 
 /// The generic Vec4 struct.
-#[derive (Copy, Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
+#[cfg_attr (feature = "serde_serialize", derive (Deserialize, Serialize))]
+#[derive (Copy, Clone, Debug, Default, PartialEq)]
 pub struct Vec4<V> where
     V: Copy + Num + NumCast {
 

@@ -9,7 +9,10 @@ license     = "Apache-2.0"
 path       = "src/lib.rs"
 crate-type = ["rlib"]
 
+[features]
+serde_serialize = ["serde", "serde_derive"]
+
 [dependencies]
 num-traits   = "*"
-serde        = "*"
-serde_derive = "*"
+serde        = {version = "*", optional = true}
+serde_derive = {version = "*", optional = true}

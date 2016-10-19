@@ -34,6 +34,7 @@
 #![feature (proc_macro)]
 
 // Crate imports
+#[cfg (feature = "serde_serialize")]
 #[macro_use]
 extern crate serde_derive;
 

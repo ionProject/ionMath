@@ -32,7 +32,8 @@ use std::ops::{AddAssign, Index, IndexMut, Mul};
 /// The generic `Mat4` struct.
 ///
 /// It is used for manipulating objects in 3d space.
-#[derive (Copy, Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
+#[cfg_attr (feature = "serde_serialize", derive (Deserialize, Serialize))]
+#[derive (Copy, Clone, Debug, Default, PartialEq)]
 pub struct Mat4<T> where
     T: Copy + Num + NumCast {
 

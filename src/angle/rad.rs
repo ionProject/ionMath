@@ -30,7 +30,8 @@ use std::convert::From;
 /*===============================================================================================*/
 
 /// Stores a value in Radians.
-#[derive (Copy, Clone, Debug, Default, Deserialize, PartialEq, PartialOrd, Serialize)]
+#[cfg_attr (feature = "serde_serialize", derive (Deserialize, Serialize))]
+#[derive (Copy, Clone, Debug, Default, PartialEq, PartialOrd)]
 pub struct Rad<V> where
     V: Copy + Float + NumCast {
 
