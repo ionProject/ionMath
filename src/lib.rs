@@ -40,6 +40,7 @@ extern crate serde_derive;
 
 // Modules
 pub mod angle;
+pub mod colour;
 pub mod matrix;
 pub mod util;
 pub mod vector;

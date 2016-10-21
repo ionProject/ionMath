@@ -19,9 +19,7 @@
 /*===============================================================================================*/
 
 // Modules
-mod rgb;
 mod rgba;
 
 // Module imports
-pub use self::rgb::RGB;
 pub use self::rgba::RGBA;
