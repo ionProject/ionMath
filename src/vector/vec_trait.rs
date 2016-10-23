@@ -22,7 +22,7 @@ use ::util::{Clamp, Lerp, MinMax};
 /*===============================================================================================*/
 
 /// Implemented by all vector types.
-pub trait Vector:
+pub trait VecTrait:
     Clamp + Default + Lerp + MinMax {
 
     /// The vector component type.
@@ -35,7 +35,7 @@ pub trait Vector:
     /// Returns the dot product of two vectors.
     fn dot       (&self, rhs: &Self) -> Self::ValType;
     /// Returns the length of a vector.
-    fn length    (&Self) -> Self::ValType;
+    fn length    (&self) -> Self::ValType;
     /// Normalizes a vector.
-    fn normalize (&Self) -> Self;
+    fn normalize (&self) -> Self;
 }
