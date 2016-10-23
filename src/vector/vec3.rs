@@ -20,7 +20,7 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Float, Num, NumCast};
 
-use ::vector::{Vec2, Vec4, VecTrait};
+use ::vector::{Vec2, Vec4, VecTrait, VecTraitF};
 use ::util::{Clamp, Lerp, MinMax};
 
 use std::ops::{Add,   AddAssign,
@@ -156,7 +156,7 @@ impl<V> MinMax for Vec3<V> where
 /*-----------------------------------------------------------------------------------------------*/
 
 impl<V> VecTrait for Vec3<V> where
-    V: Default + Float {
+    V: Copy + Default + Num + NumCast + PartialOrd {
 
     type ValType = V;
 
@@ -172,22 +172,6 @@ impl<V> VecTrait for Vec3<V> where
         Vec3::new (V::zero (),
                    V::zero (),
                    V::zero ())
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns the distance between two vectors.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::{Vec3, VecTrait};
-    /// let vec01 = Vec3::new (1.0, 3.0, 0.0);
-    /// let vec02 = Vec3::new (4.0, 9.0, 0.0);
-    ///
-    /// let distance = vec01.distance (&vec02);
-    /// ```
-    fn distance (&self, rhs: &Self) -> Self::ValType {
-        (*self - *rhs).length ()
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -208,6 +192,26 @@ impl<V> VecTrait for Vec3<V> where
         (self.y * rhs.y) +
         (self.z * rhs.z)
     }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<V> VecTraitF for Vec3<V> where
+    V: Default + Float {
+
+    /// Returns the distance between two vectors.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::vector::{Vec3, VecTraitF};
+    /// let vec01 = Vec3::new (1.0, 3.0, 0.0);
+    /// let vec02 = Vec3::new (4.0, 9.0, 0.0);
+    ///
+    /// let distance = vec01.distance (&vec02);
+    /// ```
+    fn distance (&self, rhs: &Self) -> Self::ValType {
+        (*self - *rhs).length ()
+    }
 
 /*-----------------------------------------------------------------------------------------------*/
 
@@ -215,7 +219,7 @@ impl<V> VecTrait for Vec3<V> where
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::vector::{Vec3, VecTrait};
+    /// # use ion_math::vector::{Vec3, VecTraitF};
     /// let vec = Vec3::new (1.0, 3.0, 0.0);
     /// let vec_length = vec.length ();
     /// ```
@@ -232,7 +236,7 @@ impl<V> VecTrait for Vec3<V> where
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::vector::{Vec3, VecTrait};
+    /// # use ion_math::vector::{Vec3, VecTraitF};
     /// let vec = Vec3::new (3.0, 9.0, 0.0);
     /// let vec_normalized = vec.normalize ();
     /// ```

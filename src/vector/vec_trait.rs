@@ -29,13 +29,21 @@ pub trait VecTrait:
     type ValType;
 
     /// Returns a vector with a value of zero.
-    fn zero      () -> Self;
-    /// Returns the distance between two vectors.
-    fn distance  (&self, rhs: &Self) -> Self::ValType;
+    fn zero () -> Self;
     /// Returns the dot product of two vectors.
-    fn dot       (&self, rhs: &Self) -> Self::ValType;
+    fn dot (&self, rhs: &Self) -> Self::ValType;
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+/// Implemented by vectors using float values.
+pub trait VecTraitF:
+    VecTrait {
+
+    /// Returns the distance between two vectors.
+    fn distance (&self, rhs: &Self) -> Self::ValType;
     /// Returns the length of a vector.
-    fn length    (&self) -> Self::ValType;
+    fn length (&self) -> Self::ValType;
     /// Normalizes a vector.
     fn normalize (&self) -> Self;
 }
