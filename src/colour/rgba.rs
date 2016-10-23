@@ -14,7 +14,14 @@
 // limitations under the License.
 /*===============================================================================================*/
 
+// Crate imports
+extern crate num_traits;
+
 // Module imports
+use self::num_traits::{Num, NumCast};
+
+use ::vector::{Vec2, Vec3, Vec4};
+
 use std::convert::From;
 
 /*===============================================================================================*/
@@ -57,6 +64,48 @@ impl From<f32> for RGBA {
     }
 }
 
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> From<Vec2<T>> for RGBA where
+    T: Copy + Num + NumCast {
+
+    fn from (value: Vec2<T>) -> Self {
+
+        RGBA::new (value.x.to_f32 ().unwrap (),
+                   value.y.to_f32 ().unwrap (),
+                   0.0, 1.0)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> From<Vec3<T>> for RGBA where
+    T: Copy + Num + NumCast {
+
+    fn from (value: Vec3<T>) -> Self {
+
+        RGBA::new (value.x.to_f32 ().unwrap (),
+                   value.y.to_f32 ().unwrap (),
+                   value.z.to_f32 ().unwrap (),
+                   1.0)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> From<Vec4<T>> for RGBA where
+    T: Copy + Num + NumCast {
+
+
+    fn from (value: Vec4<T>) -> Self {
+
+        RGBA::new (value.x.to_f32 ().unwrap (),
+                   value.y.to_f32 ().unwrap (),
+                   value.z.to_f32 ().unwrap (),
+                   value.w.to_f32 ().unwrap ())
+    }
+}
+
 /*===============================================================================================*/
 /*------RGBA PUBLIC METHODS----------------------------------------------------------------------*/
 /*===============================================================================================*/
@@ -72,5 +121,161 @@ impl RGBA {
     /// ```
     pub fn new (r: f32, g: f32, b: f32, a: f32) -> Self {
         RGBA {r: r, g: g, b: b, a: a}
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour black.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::black ();
+    /// ```
+    pub fn black () -> Self {
+        RGBA::new (0.0, 0.0, 0.0, 1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour light grey.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::light_grey ();
+    /// ```
+    pub fn light_grey () -> Self {
+        RGBA::new (0.75, 0.75, 0.75, 1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour grey.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::grey ();
+    /// ```
+    pub fn grey () -> Self {
+        RGBA::new (0.5, 0.5, 0.5, 1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour dark grey.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::dark_grey ();
+    /// ```
+    pub fn dark_grey () -> Self {
+        RGBA::new (0.25, 0.25, 0.25, 1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour white.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::white ();
+    /// ```
+    pub fn white () -> Self {
+        RGBA::from (1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour red.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::red ();
+    /// ```
+    pub fn red () -> Self {
+        RGBA::new (1.0, 0.0, 0.0, 1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour green.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::green ();
+    /// ```
+    pub fn green () -> Self {
+        RGBA::new (0.0, 1.0, 0.0, 1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour blue.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::blue ();
+    /// ```
+    pub fn blue () -> Self {
+        RGBA::new (0.0, 0.0, 1.0, 1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour yellow.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::yellow ();
+    /// ```
+    pub fn yellow () -> Self {
+        RGBA::new (1.0, 1.0, 0.0, 1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour cyan.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::cyan ();
+    /// ```
+    pub fn cyan () -> Self {
+        RGBA::new (0.0, 1.0, 1.0, 1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the colour magenta.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::magenta ();
+    /// ```
+    pub fn magenta () -> Self {
+        RGBA::new (1.0, 0.0, 1.0, 1.0)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns a fully transparent colour.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::transparent ();
+    /// ```
+    pub fn transparent () -> Self {
+        RGBA::from (0.0)
     }
 }
