@@ -20,6 +20,7 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Num, NumCast};
 
+use ::matrix::MatTrait;
 use ::vector::Vec3;
 
 use std::convert::From;
@@ -74,6 +75,26 @@ impl<T> From<[Vec3<T>; 3]> for Mat3<T> where
         Mat3 {array: [value[0],
                       value[1],
                       value[2]]}
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> MatTrait for Mat3<T> where
+    T: Copy + Default + Num + NumCast {
+
+    /// Returns a new identity matrix.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::matrix::{Mat3, MatTrait};
+    /// let mat = Mat3::<f32>::identity ();
+    /// ```
+    fn identity () -> Self {
+
+        Mat3::new (T::one  (), T::zero (), T::zero (),
+                   T::zero (), T::one  (), T::zero (),
+                   T::zero (), T::zero (), T::one  ())
     }
 }
 
@@ -167,22 +188,6 @@ impl<T> Mat3<T> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    /// Returns a new identity matrix.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::matrix::Mat3;
-    /// let mat = Mat3::<f32>::identity ();
-    /// ```
-    pub fn identity () -> Self {
-
-        Mat3::new (T::one  (), T::zero (), T::zero (),
-                   T::zero (), T::one  (), T::zero (),
-                   T::zero (), T::zero (), T::one  ())
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
     /// Returns a matrix with all zeros.
     ///
     /// # Examples
@@ -191,7 +196,6 @@ impl<T> Mat3<T> where
     /// let mat = Mat3::<f32>::zero ();
     /// ```
     pub fn zero () -> Self {
-
         Mat3::from (T::zero ())
     }
 }
