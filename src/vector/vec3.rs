@@ -199,6 +199,8 @@ impl<V> VecTrait for Vec3<V> where
 impl<V> VecTraitF for Vec3<V> where
     V: Default + Float {
 
+    type ValTypeF = V;
+
     /// Returns the distance between two vectors.
     ///
     /// # Examples
@@ -209,7 +211,7 @@ impl<V> VecTraitF for Vec3<V> where
     ///
     /// let distance = vec01.distance (&vec02);
     /// ```
-    fn distance (&self, rhs: &Self) -> Self::ValType {
+    fn distance (&self, rhs: &Self) -> Self::ValTypeF {
         (*self - *rhs).length ()
     }
 
@@ -223,7 +225,7 @@ impl<V> VecTraitF for Vec3<V> where
     /// let vec = Vec3::new (1.0, 3.0, 0.0);
     /// let vec_length = vec.length ();
     /// ```
-    fn length (&self) -> Self::ValType {
+    fn length (&self) -> Self::ValTypeF {
 
         (self.x * self.x +
          self.y * self.y +

@@ -14,6 +14,12 @@
 // limitations under the License.
 /*===============================================================================================*/
 
+// Crate imports
+extern crate num_traits;
+
+// Module imports
+use self::num_traits::{Float, Num};
+
 // Module imports
 use ::util::{Clamp, Lerp, MinMax};
 
@@ -26,7 +32,7 @@ pub trait VecTrait:
     Clamp + Default + Lerp + MinMax {
 
     /// The vector component type.
-    type ValType;
+    type ValType: Num;
 
     /// Returns a vector with a value of zero.
     fn zero () -> Self;
@@ -40,10 +46,13 @@ pub trait VecTrait:
 pub trait VecTraitF:
     VecTrait {
 
+    /// The vector component type.
+    type ValTypeF: Float;
+
     /// Returns the distance between two vectors.
-    fn distance (&self, rhs: &Self) -> Self::ValType;
+    fn distance (&self, rhs: &Self) -> Self::ValTypeF;
     /// Returns the length of a vector.
-    fn length (&self) -> Self::ValType;
+    fn length (&self) -> Self::ValTypeF;
     /// Normalizes a vector.
     fn normalize (&self) -> Self;
 }
