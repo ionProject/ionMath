@@ -20,6 +20,7 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Num, NumCast};
 
+use ::colour::ColourTrait;
 use ::util::{Clamp, Lerp};
 use ::vector::{Vec2, Vec3, Vec4};
 
@@ -150,33 +151,18 @@ impl Lerp for RGBA {
     }
 }
 
-/*===============================================================================================*/
-/*------RGBA PUBLIC METHODS----------------------------------------------------------------------*/
-/*===============================================================================================*/
-
-impl RGBA {
-
-    /// Returns a new `RGBA` instance.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::colour::RGBA;
-    /// let colour = RGBA::new (0.0, 1.0, 0.5, 1.0);
-    /// ```
-    pub fn new (r: f32, g: f32, b: f32, a: f32) -> Self {
-        RGBA {r: r, g: g, b: b, a: a}
-    }
-
 /*-----------------------------------------------------------------------------------------------*/
+
+impl ColourTrait for RGBA {
 
     /// Returns the colour black.
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::black ();
     /// ```
-    pub fn black () -> Self {
+    fn black () -> Self {
         RGBA::new (0.0, 0.0, 0.0, 1.0)
     }
 
@@ -186,10 +172,10 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::light_grey ();
     /// ```
-    pub fn light_grey () -> Self {
+    fn light_grey () -> Self {
         RGBA::new (0.75, 0.75, 0.75, 1.0)
     }
 
@@ -199,10 +185,10 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::grey ();
     /// ```
-    pub fn grey () -> Self {
+    fn grey () -> Self {
         RGBA::new (0.5, 0.5, 0.5, 1.0)
     }
 
@@ -212,10 +198,10 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::dark_grey ();
     /// ```
-    pub fn dark_grey () -> Self {
+    fn dark_grey () -> Self {
         RGBA::new (0.25, 0.25, 0.25, 1.0)
     }
 
@@ -225,10 +211,10 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::white ();
     /// ```
-    pub fn white () -> Self {
+    fn white () -> Self {
         RGBA::from (1.0)
     }
 
@@ -238,10 +224,10 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::red ();
     /// ```
-    pub fn red () -> Self {
+    fn red () -> Self {
         RGBA::new (1.0, 0.0, 0.0, 1.0)
     }
 
@@ -251,10 +237,10 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::green ();
     /// ```
-    pub fn green () -> Self {
+    fn green () -> Self {
         RGBA::new (0.0, 1.0, 0.0, 1.0)
     }
 
@@ -264,10 +250,10 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::blue ();
     /// ```
-    pub fn blue () -> Self {
+    fn blue () -> Self {
         RGBA::new (0.0, 0.0, 1.0, 1.0)
     }
 
@@ -277,10 +263,10 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::yellow ();
     /// ```
-    pub fn yellow () -> Self {
+    fn yellow () -> Self {
         RGBA::new (1.0, 1.0, 0.0, 1.0)
     }
 
@@ -290,10 +276,10 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::cyan ();
     /// ```
-    pub fn cyan () -> Self {
+    fn cyan () -> Self {
         RGBA::new (0.0, 1.0, 1.0, 1.0)
     }
 
@@ -303,10 +289,10 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::magenta ();
     /// ```
-    pub fn magenta () -> Self {
+    fn magenta () -> Self {
         RGBA::new (1.0, 0.0, 1.0, 1.0)
     }
 
@@ -316,10 +302,27 @@ impl RGBA {
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::colour::RGBA;
+    /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::transparent ();
     /// ```
-    pub fn transparent () -> Self {
+    fn transparent () -> Self {
         RGBA::from (0.0)
+    }
+}
+
+/*===============================================================================================*/
+/*------RGBA PUBLIC METHODS----------------------------------------------------------------------*/
+/*===============================================================================================*/
+
+impl RGBA {
+    /// Returns a new `RGBA` instance.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::colour::RGBA;
+    /// let colour = RGBA::new (0.0, 1.0, 0.5, 1.0);
+    /// ```
+    pub fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
+        RGBA { r: r, g: g, b: b, a: a }
     }
 }

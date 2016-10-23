@@ -14,14 +14,39 @@
 // limitations under the License.
 /*===============================================================================================*/
 
-/*===============================================================================================*/
-//! TODO: Add module documentation.
-/*===============================================================================================*/
-
-// Modules
-mod colour_trait;
-mod rgba;
-
 // Module imports
-pub use self::colour_trait::ColourTrait;
-pub use self::rgba::RGBA;
+use ::util::{Clamp, Lerp};
+
+/*===============================================================================================*/
+/*------COLOUR TRAIT-----------------------------------------------------------------------------*/
+/*===============================================================================================*/
+
+/// Implemented by all colour types.
+pub trait ColourTrait:
+    Clamp + Default + Lerp {
+
+    /// Returns the colour black.
+    fn black () -> Self;
+    /// Returns the colour light_grey.
+    fn light_grey () -> Self;
+    /// Returns the colour grey.
+    fn grey () -> Self;
+    /// Returns the colour dark_grey.
+    fn dark_grey () -> Self;
+    /// Returns the colour white.
+    fn white () -> Self;
+    /// Returns the colour red.
+    fn red () -> Self;
+    /// Returns the colour green.
+    fn green () -> Self;
+    /// Returns the colour blue.
+    fn blue () -> Self;
+    /// Returns the colour yellow.
+    fn yellow () -> Self;
+    /// Returns the colour cyan.
+    fn cyan () -> Self;
+    /// Returns the colour magenta.
+    fn magenta () -> Self;
+    /// Returns a fully transparent colour.
+    fn transparent () -> Self;
+}
