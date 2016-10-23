@@ -20,6 +20,7 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Num, NumCast};
 
+use ::util::{Clamp, Lerp};
 use ::vector::{Vec2, Vec3, Vec4};
 
 use std::convert::From;
@@ -47,6 +48,26 @@ pub struct RGBA {
 /*===============================================================================================*/
 /*------RGBA TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
 /*===============================================================================================*/
+
+impl Clamp for RGBA {
+
+    fn clamp (self, min: Self, max: Self) -> Self {
+
+        debug_assert! (min.r < max.r, "Min cannot be greater than max.");
+        debug_assert! (min.g < max.g, "Min cannot be greater than max.");
+        debug_assert! (min.b < max.b, "Min cannot be greater than max.");
+        debug_assert! (min.a < max.a, "Min cannot be greater than max.");
+
+        let rval = if self.r < min.r {min.r} else if self.r > max.r {max.r} else {self.r};
+        let gval = if self.g < min.g {min.g} else if self.g > max.g {max.g} else {self.g};
+        let bval = if self.b < min.b {min.b} else if self.b > max.b {max.b} else {self.b};
+        let aval = if self.a < min.a {min.a} else if self.a > max.a {max.a} else {self.a};
+
+        RGBA::new (rval, gval, bval, aval)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
 
 impl Default for RGBA {
 
@@ -103,6 +124,29 @@ impl<T> From<Vec4<T>> for RGBA where
                    value.y.to_f32 ().unwrap (),
                    value.z.to_f32 ().unwrap (),
                    value.w.to_f32 ().unwrap ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl Lerp for RGBA {
+
+    fn lerp (start: Self, end: Self, percentage: f32) -> Self {
+
+        RGBA::new (f32::lerp (start.r, end.r, percentage),
+                   f32::lerp (start.g, end.g, percentage),
+                   f32::lerp (start.b, end.b, percentage),
+                   f32::lerp (start.a, end.a, percentage))
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn lerp_unclamped (start: Self, end: Self, percentage: f32) -> Self {
+
+        RGBA::new (f32::lerp_unclamped (start.r, end.r, percentage),
+                   f32::lerp_unclamped (start.g, end.g, percentage),
+                   f32::lerp_unclamped (start.b, end.b, percentage),
+                   f32::lerp_unclamped (start.a, end.a, percentage))
     }
 }
 
