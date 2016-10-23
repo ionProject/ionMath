@@ -14,16 +14,39 @@
 // limitations under the License.
 /*===============================================================================================*/
 
-/*===============================================================================================*/
-//! TODO: Add module documentation.
-/*===============================================================================================*/
-
-// Modules
-mod mat3;
-mod mat4;
-mod mat_trait;
-
 // Module imports
-pub use self::mat3::{Mat3, Mat3f, Mat3i, Mat3u};
-pub use self::mat4::{Mat4, Mat4f, Mat4i, Mat4u};
-pub use self::mat_trait::MatTrait;
+use ::util::{Clamp, Lerp};
+
+/*===============================================================================================*/
+/*------COLOUR TRAIT-----------------------------------------------------------------------------*/
+/*===============================================================================================*/
+
+/// Implemented by all colour types.
+pub trait ColourTrait:
+    Clamp + Default + Lerp {
+
+    /// Returns the colour black.
+    fn black () -> Self;
+    /// Returns the colour light_grey.
+    fn light_grey () -> Self;
+    /// Returns the colour grey.
+    fn grey () -> Self;
+    /// Returns the colour dark_grey.
+    fn dark_grey () -> Self;
+    /// Returns the colour white.
+    fn white () -> Self;
+    /// Returns the colour red.
+    fn red () -> Self;
+    /// Returns the colour green.
+    fn green () -> Self;
+    /// Returns the colour blue.
+    fn blue () -> Self;
+    /// Returns the colour yellow.
+    fn yellow () -> Self;
+    /// Returns the colour cyan.
+    fn cyan () -> Self;
+    /// Returns the colour magenta.
+    fn magenta () -> Self;
+    /// Returns a fully transparent colour.
+    fn transparent () -> Self;
+}

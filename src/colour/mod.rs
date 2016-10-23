@@ -19,7 +19,9 @@
 /*===============================================================================================*/
 
 // Modules
+mod colour_trait;
 mod rgba;
 
 // Module imports
+pub use self::colour_trait::ColourTrait;
 pub use self::rgba::RGBA;

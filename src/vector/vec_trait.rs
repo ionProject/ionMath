@@ -14,16 +14,36 @@
 // limitations under the License.
 /*===============================================================================================*/
 
-/*===============================================================================================*/
-//! TODO: Add module documentation.
-/*===============================================================================================*/
-
-// Modules
-mod mat3;
-mod mat4;
-mod mat_trait;
-
 // Module imports
-pub use self::mat3::{Mat3, Mat3f, Mat3i, Mat3u};
-pub use self::mat4::{Mat4, Mat4f, Mat4i, Mat4u};
-pub use self::mat_trait::MatTrait;
+use ::util::{Clamp, Lerp, MinMax};
+
+/*===============================================================================================*/
+/*------VECTOR TRAIT-----------------------------------------------------------------------------*/
+/*===============================================================================================*/
+
+/// Implemented by all vector types.
+pub trait VecTrait:
+    Clamp + Default + Lerp + MinMax {
+
+    /// The vector component type.
+    type ValType;
+
+    /// Returns a vector with a value of zero.
+    fn zero () -> Self;
+    /// Returns the dot product of two vectors.
+    fn dot (&self, rhs: &Self) -> Self::ValType;
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+/// Implemented by vectors using float values.
+pub trait VecTraitF:
+    VecTrait {
+
+    /// Returns the distance between two vectors.
+    fn distance (&self, rhs: &Self) -> Self::ValType;
+    /// Returns the length of a vector.
+    fn length (&self) -> Self::ValType;
+    /// Normalizes a vector.
+    fn normalize (&self) -> Self;
+}

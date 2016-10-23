@@ -20,6 +20,7 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Num, NumCast};
 
+use ::matrix::MatTrait;
 use ::vector::Vec4;
 
 use std::convert::From;
@@ -76,6 +77,27 @@ impl<T> From<[Vec4<T>; 4]> for Mat4<T> where
                       value[1],
                       value[2],
                       value[3]]}
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> MatTrait for Mat4<T> where
+    T: Copy + Default + Num + NumCast {
+
+    /// Returns a new identity matrix.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::matrix::{Mat4, MatTrait};
+    /// let mat = Mat4::<f32>::identity ();
+    /// ```
+    fn identity () -> Self {
+
+        Mat4::new (T::one  (), T::zero (), T::zero (), T::zero (),
+                   T::zero (), T::one  (), T::zero (), T::zero (),
+                   T::zero (), T::zero (), T::one  (), T::zero (),
+                   T::zero (), T::zero (), T::zero (), T::one  ())
     }
 }
 
@@ -172,23 +194,6 @@ impl<T> Mat4<T> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    /// Returns a new identity matrix.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::matrix::Mat4;
-    /// let mat = Mat4::<f32>::identity ();
-    /// ```
-    pub fn identity () -> Self {
-
-        Mat4::new (T::one  (), T::zero (), T::zero (), T::zero (),
-                   T::zero (), T::one  (), T::zero (), T::zero (),
-                   T::zero (), T::zero (), T::one  (), T::zero (),
-                   T::zero (), T::zero (), T::zero (), T::one  ())
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
     /// Returns a matrix with all zeros.
     ///
     /// # Examples
@@ -197,7 +202,6 @@ impl<T> Mat4<T> where
     /// let mat = Mat4::<f32>::zero ();
     /// ```
     pub fn zero () -> Self {
-
         Mat4::from (T::zero ())
     }
 }

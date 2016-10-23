@@ -22,8 +22,10 @@
 mod vec2;
 mod vec3;
 mod vec4;
+mod vec_trait;
 
 // Module imports
 pub use self::vec2::{Vec2, Vec2f, Vec2i, Vec2u};
 pub use self::vec3::{Vec3, Vec3f, Vec3i, Vec3u};
 pub use self::vec4::{Vec4, Vec4f, Vec4i, Vec4u};
+pub use self::vec_trait::{VecTrait, VecTraitF};

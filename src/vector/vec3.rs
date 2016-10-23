@@ -20,7 +20,7 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Float, Num, NumCast};
 
-use ::vector::{Vec2, Vec4};
+use ::vector::{Vec2, Vec4, VecTrait, VecTraitF};
 use ::util::{Clamp, Lerp, MinMax};
 
 use std::ops::{Add,   AddAssign,
@@ -150,6 +150,108 @@ impl<V> MinMax for Vec3<V> where
         Vec3::new (V::min (lhs.x, rhs.x),
                    V::min (lhs.y, rhs.y),
                    V::min (lhs.z, rhs.z))
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<V> VecTrait for Vec3<V> where
+    V: Copy + Default + Num + NumCast + PartialOrd {
+
+    type ValType = V;
+
+    /// Returns a `Vec3<V>` with a value of zero.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::vector::{Vec3, VecTrait};
+    /// let vec = Vec3::<f32>::zero ();
+    /// ```
+    fn zero () -> Self {
+
+        Vec3::new (V::zero (),
+                   V::zero (),
+                   V::zero ())
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the dot product of two vectors.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::vector::{Vec3, VecTrait};
+    /// let vec01 = Vec3::new (1.0, 3.0, 0.0);
+    /// let vec02 = Vec3::new (4.0, 9.0, 0.0);
+    ///
+    /// let dot_product = vec01.dot (&vec02);
+    /// ```
+    fn dot (&self, rhs: &Self) -> Self::ValType {
+
+        (self.x * rhs.x) +
+        (self.y * rhs.y) +
+        (self.z * rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<V> VecTraitF for Vec3<V> where
+    V: Default + Float {
+
+    /// Returns the distance between two vectors.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::vector::{Vec3, VecTraitF};
+    /// let vec01 = Vec3::new (1.0, 3.0, 0.0);
+    /// let vec02 = Vec3::new (4.0, 9.0, 0.0);
+    ///
+    /// let distance = vec01.distance (&vec02);
+    /// ```
+    fn distance (&self, rhs: &Self) -> Self::ValType {
+        (*self - *rhs).length ()
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns the length of a vector.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::vector::{Vec3, VecTraitF};
+    /// let vec = Vec3::new (1.0, 3.0, 0.0);
+    /// let vec_length = vec.length ();
+    /// ```
+    fn length (&self) -> Self::ValType {
+
+        (self.x * self.x +
+         self.y * self.y +
+         self.z * self.z).sqrt ()
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns a normalized vector.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::vector::{Vec3, VecTraitF};
+    /// let vec = Vec3::new (3.0, 9.0, 0.0);
+    /// let vec_normalized = vec.normalize ();
+    /// ```
+    fn normalize (&self) -> Self {
+
+        let length = self.length ();
+
+        if length != V::zero () {
+
+            return Vec3::new (self.x / length,
+                              self.y / length,
+                              self.z / length);
+        }
+
+        Vec3::zero ()
     }
 }
 
@@ -459,25 +561,6 @@ impl<V> Vec3<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    /// Returns the dot product of two vectors.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec3;
-    /// let vec01 = Vec3::new (1, 3, 0);
-    /// let vec02 = Vec3::new (4, 9, 0);
-    ///
-    /// let dot_product = vec01.dot (&vec02);
-    /// ```
-    pub fn dot (&self, rhs: &Vec3<V>) -> V {
-
-        (self.x * rhs.x) +
-        (self.y * rhs.y) +
-        (self.z * rhs.z)
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
     /// Returns a new `Vec3<V>` instance.
     ///
     /// # Examples
@@ -508,22 +591,6 @@ impl<V> Vec3<V> where
         Vec3::new (V::from (value.x).unwrap (),
                    V::from (value.y).unwrap (),
                    V::from (value.z).unwrap ())
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns a `Vec3<V>` with a value of zero.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec3;
-    /// let vec = Vec3::<f32>::zero ();
-    /// ```
-    pub fn zero () -> Vec3<V> {
-
-        Vec3::new (V::zero (),
-                   V::zero (),
-                   V::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -620,67 +687,5 @@ impl<V> Vec3<V> where
         Vec3::new (V::zero (),
                    V::zero (),
                    V::from (-1).unwrap ())
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Vec3<V> where
-    V: Float {
-
-    /// Returns the distance between two vectors.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec3;
-    /// let vec01 = Vec3::new (1.0, 3.0, 0.0);
-    /// let vec02 = Vec3::new (4.0, 9.0, 0.0);
-    ///
-    /// let distance = vec01.distance (&vec02);
-    /// ```
-    pub fn distance (&self, rhs: &Vec3<V>) -> V {
-
-        (*self - *rhs).length ()
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns the length of a vector.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec3;
-    /// let vec = Vec3::new (1.0, 3.0, 0.0);
-    /// let vec_length = vec.length ();
-    /// ```
-    pub fn length (&self) -> V {
-
-        (self.x * self.x +
-         self.y * self.y +
-         self.z * self.z).sqrt ()
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns a normalized vector.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec3;
-    /// let vec = Vec3::new (3.0, 9.0, 0.0);
-    /// let vec_normalized = vec.normalize ();
-    /// ```
-    pub fn normalize (&self) -> Vec3<V> {
-
-        let length = self.length ();
-
-        if length != V::zero () {
-
-            return Vec3::new (self.x / length,
-                              self.y / length,
-                              self.z / length);
-        }
-
-        Vec3::zero ()
     }
 }
