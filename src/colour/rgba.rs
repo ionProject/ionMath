@@ -88,10 +88,10 @@ impl From<f32> for RGBA {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<T> From<Vec2<T>> for RGBA where
+impl<'a, T> From<&'a Vec2<T>> for RGBA where
     T: Copy + Num + NumCast {
 
-    fn from (value: Vec2<T>) -> Self {
+    fn from (value: &Vec2<T>) -> Self {
 
         RGBA::new (value.x.to_f32 ().unwrap (),
                    value.y.to_f32 ().unwrap (),
@@ -101,10 +101,10 @@ impl<T> From<Vec2<T>> for RGBA where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<T> From<Vec3<T>> for RGBA where
+impl<'a, T> From<&'a Vec3<T>> for RGBA where
     T: Copy + Num + NumCast {
 
-    fn from (value: Vec3<T>) -> Self {
+    fn from (value: &Vec3<T>) -> Self {
 
         RGBA::new (value.x.to_f32 ().unwrap (),
                    value.y.to_f32 ().unwrap (),
@@ -115,11 +115,11 @@ impl<T> From<Vec3<T>> for RGBA where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<T> From<Vec4<T>> for RGBA where
+impl<'a, T> From<&'a Vec4<T>> for RGBA where
     T: Copy + Num + NumCast {
 
 
-    fn from (value: Vec4<T>) -> Self {
+    fn from (value: &Vec4<T>) -> Self {
 
         RGBA::new (value.x.to_f32 ().unwrap (),
                    value.y.to_f32 ().unwrap (),

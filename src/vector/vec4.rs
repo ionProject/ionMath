@@ -84,11 +84,11 @@ impl<V> Clamp for Vec4<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V, U> From<Vec2<U>> for Vec4<V> where
+impl<'a, V, U> From<&'a Vec2<U>> for Vec4<V> where
     V: Copy + Num + NumCast,
     U: Copy + Num + NumCast {
 
-    fn from (value: Vec2<U>) -> Vec4<V> {
+    fn from (value: &Vec2<U>) -> Vec4<V> {
 
         Vec4::new (V::from (value.x).unwrap (),
                    V::from (value.y).unwrap (),
@@ -99,16 +99,31 @@ impl<V, U> From<Vec2<U>> for Vec4<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V, U> From<Vec3<U>> for Vec4<V> where
+impl<'a, V, U> From<&'a Vec3<U>> for Vec4<V> where
     V: Copy + Num + NumCast,
     U: Copy + Num + NumCast {
 
-    fn from (value: Vec3<U>) -> Vec4<V> {
+    fn from (value: &Vec3<U>) -> Vec4<V> {
 
         Vec4::new (V::from (value.x).unwrap (),
                    V::from (value.y).unwrap (),
                    V::from (value.z).unwrap (),
                    V::zero ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V, U> From<&'a Vec4<U>> for Vec4<V> where
+    V: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: &Vec4<U>) -> Vec4<V> {
+
+        Vec4::new (V::from (value.x).unwrap (),
+                   V::from (value.y).unwrap (),
+                   V::from (value.z).unwrap (),
+                   V::from (value.w).unwrap ())
     }
 }
 
@@ -555,25 +570,6 @@ impl<V> IndexMut<u8> for Vec4<V> where
 impl<V> Vec4<V> where
     V: Copy + Num + NumCast {
 
-    /// Converts self into an instance of `Vec4<C>`.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec4;
-    /// let vec01: Vec4<f32> = Vec4::new (4.3, 9.8, 7.0, 3.1);
-    /// let vec02: Vec4<i32> = vec01.into ();
-    /// ```
-    pub fn into<C> (self) -> Vec4<C> where
-        C: Copy + Num + NumCast {
-
-        Vec4::new (C::from (self.x).unwrap (),
-                   C::from (self.y).unwrap (),
-                   C::from (self.z).unwrap (),
-                   C::from (self.w).unwrap ())
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
     /// Returns a new `Vec4<V>` instance.
     ///
     /// # Examples
@@ -587,25 +583,6 @@ impl<V> Vec4<V> where
               y: y,
               z: z,
               w: w}
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns a new instance of `Vec4<V>` from an instance of `Vec4<C>`.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec4;
-    /// let vec01: Vec4<f32> = Vec4::new  (3.2, 9.8, 7.0, 6.7);
-    /// let vec02: Vec4<i32> = Vec4::from (vec01);
-    /// ```
-    pub fn from<C> (value: Vec4<C>) -> Vec4<V> where
-        C: Copy + Num + NumCast {
-
-        Vec4::new (V::from (value.x).unwrap (),
-                   V::from (value.y).unwrap (),
-                   V::from (value.z).unwrap (),
-                   V::from (value.w).unwrap ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
