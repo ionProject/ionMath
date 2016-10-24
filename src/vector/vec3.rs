@@ -83,11 +83,11 @@ impl<V> Clamp for Vec3<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V, U> From<Vec2<U>> for Vec3<V> where
+impl<'a, V, U> From<&'a Vec2<U>> for Vec3<V> where
     V: Copy + Num + NumCast,
     U: Copy + Num + NumCast {
 
-    fn from (value: Vec2<U>) -> Vec3<V> {
+    fn from (value: &Vec2<U>) -> Vec3<V> {
 
         Vec3::new (V::from (value.x).unwrap (),
                    V::from (value.y).unwrap (),
@@ -97,11 +97,25 @@ impl<V, U> From<Vec2<U>> for Vec3<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V, U> From<Vec4<U>> for Vec3<V> where
+impl<'a, V, U> From<&'a Vec3<U>> for Vec3<V> where
     V: Copy + Num + NumCast,
     U: Copy + Num + NumCast {
 
-    fn from (value: Vec4<U>) -> Vec3<V> {
+    fn from (value: &Vec3<U>) -> Vec3<V> {
+
+        Vec3::new (V::from (value.x).unwrap (),
+                   V::from (value.y).unwrap (),
+                   V::from (value.z).unwrap ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V, U> From<&'a Vec4<U>> for Vec3<V> where
+    V: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: &Vec4<U>) -> Vec3<V> {
 
         Vec3::new (V::from (value.x).unwrap (),
                    V::from (value.y).unwrap (),
@@ -526,24 +540,6 @@ impl<V> IndexMut<u8> for Vec3<V> where
 impl<V> Vec3<V> where
     V: Copy + Num + NumCast {
 
-    /// Converts self into an instance of `Vec3<C>`.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec3;
-    /// let vec01: Vec3<f32> = Vec3::new (4.3, 9.8, 7.0);
-    /// let vec02: Vec3<i32> = vec01.into ();
-    /// ```
-    pub fn into<C> (self) -> Vec3<C> where
-        C: Copy + Num + NumCast {
-
-        Vec3::new (C::from (self.x).unwrap (),
-                   C::from (self.y).unwrap (),
-                   C::from (self.z).unwrap ())
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
     /// Returns the cross product of two vectors.
     ///
     /// # Examples
@@ -575,24 +571,6 @@ impl<V> Vec3<V> where
         Vec3 {x: x,
               y: y,
               z: z}
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns a new instance of `Vec3<V>` from an instance of `Vec3<C>`.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec3;
-    /// let vec01: Vec3<f32> = Vec3::new  (3.2, 9.8, 7.0);
-    /// let vec02: Vec3<i32> = Vec3::from (vec01);
-    /// ```
-    pub fn from<C> (value: Vec3<C>) -> Vec3<V> where
-        C: Copy + Num + NumCast {
-
-        Vec3::new (V::from (value.x).unwrap (),
-                   V::from (value.y).unwrap (),
-                   V::from (value.z).unwrap ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/

@@ -67,14 +67,14 @@ impl<T> From<T> for Mat3<T> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<T> From<[Vec3<T>; 3]> for Mat3<T> where
+impl<'a, T> From<[&'a Vec3<T>; 3]> for Mat3<T> where
     T: Copy + Num + NumCast {
 
-    fn from (value: [Vec3<T>; 3]) -> Self {
+    fn from (value: [&Vec3<T>; 3]) -> Self {
 
-        Mat3 {array: [value[0],
-                      value[1],
-                      value[2]]}
+        Mat3 {array: [*value[0],
+                      *value[1],
+                      *value[2]]}
     }
 }
 

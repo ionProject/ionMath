@@ -68,15 +68,15 @@ impl<T> From<T> for Mat4<T> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<T> From<[Vec4<T>; 4]> for Mat4<T> where
+impl<'a, T> From<[&'a Vec4<T>; 4]> for Mat4<T> where
     T: Copy + Num + NumCast {
 
-    fn from (value: [Vec4<T>; 4]) -> Self {
+    fn from (value: [&Vec4<T>; 4]) -> Self {
 
-        Mat4 {array: [value[0],
-                      value[1],
-                      value[2],
-                      value[3]]}
+        Mat4 {array: [*value[0],
+                      *value[1],
+                      *value[2],
+                      *value[3]]}
     }
 }
 

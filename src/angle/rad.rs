@@ -56,11 +56,10 @@ impl<V> Clamp for Rad<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> From<Deg<V>> for Rad<V> where
+impl<'a, V> From<&'a Deg<V>> for Rad<V> where
     V: Copy + Float + NumCast {
 
-    fn from (deg: Deg<V>) -> Rad<V> {
-
+    fn from (deg: &Deg<V>) -> Rad<V> {
         Rad::new (deg.value * V::from (0.017453).unwrap ())
     }
 }
