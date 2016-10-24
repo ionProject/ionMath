@@ -34,7 +34,7 @@ pub trait Lerp {
     /// # Examples
     /// ```
     /// # use ion_math::util::Lerp;
-    /// println! ("{}", f32::lerp (1.0, 7.5, 0.5));
+    /// println! ("{}", f32::lerp (&1.0, &7.5, 0.5));
     /// ```
     fn lerp (start: &Self, end: &Self, percentage: f32) -> Self;
 
@@ -43,7 +43,7 @@ pub trait Lerp {
     /// # Examples
     /// ```
     /// # use ion_math::util::Lerp;
-    /// println! ("{}", f32::lerp (1.0, 7.5, 0.5));
+    /// println! ("{}", f32::lerp (&1.0, &7.5, 0.5));
     /// ```
     fn lerp_unclamped (start: &Self, end: &Self, percentage: f32) -> Self;
 }
