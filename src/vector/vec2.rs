@@ -122,18 +122,18 @@ impl<'a, V, U> From<&'a Vec4<U>> for Vec2<V> where
 impl<V> Lerp for Vec2<V> where
     V: Copy + Num + NumCast {
 
-    fn lerp (start: Self, end: Self, percentage: f32) -> Self {
+    fn lerp (start: &Self, end: &Self, percentage: f32) -> Self {
 
-        Vec2::new (V::lerp (start.x, end.x, percentage),
-                   V::lerp (start.y, end.y, percentage))
+        Vec2::new (V::lerp (&start.x, &end.x, percentage),
+                   V::lerp (&start.y, &end.y, percentage))
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn lerp_unclamped (start: Self, end: Self, percentage: f32) -> Self {
+    fn lerp_unclamped (start: &Self, end: &Self, percentage: f32) -> Self {
 
-        Vec2::new (V::lerp_unclamped (start.x, end.x, percentage),
-                   V::lerp_unclamped (start.y, end.y, percentage))
+        Vec2::new (V::lerp_unclamped (&start.x, &end.x, percentage),
+                   V::lerp_unclamped (&start.y, &end.y, percentage))
     }
 }
 

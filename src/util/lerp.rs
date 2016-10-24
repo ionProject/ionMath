@@ -36,7 +36,7 @@ pub trait Lerp {
     /// # use ion_math::util::Lerp;
     /// println! ("{}", f32::lerp (1.0, 7.5, 0.5));
     /// ```
-    fn lerp (start: Self, end: Self, percentage: f32) -> Self;
+    fn lerp (start: &Self, end: &Self, percentage: f32) -> Self;
 
     /// Linearly interpolates between two values without clamping.
     ///
@@ -45,7 +45,7 @@ pub trait Lerp {
     /// # use ion_math::util::Lerp;
     /// println! ("{}", f32::lerp (1.0, 7.5, 0.5));
     /// ```
-    fn lerp_unclamped (start: Self, end: Self, percentage: f32) -> Self;
+    fn lerp_unclamped (start: &Self, end: &Self, percentage: f32) -> Self;
 }
 
 /*===============================================================================================*/
@@ -55,13 +55,13 @@ pub trait Lerp {
 impl<T> Lerp for T where
     T: Copy + Num + NumCast {
 
-    fn lerp (start: Self, end: Self, percentage: f32) -> Self {
-        T::from ((start + (end - start)).to_f32 ().unwrap () * percentage.clamp (0.0, 1.0)).unwrap ()
+    fn lerp (start: &Self, end: &Self, percentage: f32) -> Self {
+        T::from ((*start + (*end - *start)).to_f32 ().unwrap () * percentage.clamp (0.0, 1.0)).unwrap ()
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn lerp_unclamped (start: Self, end: Self, percentage: f32) -> Self {
-        T::from ((start + (end - start)).to_f32 ().unwrap () * percentage).unwrap ()
+    fn lerp_unclamped (start: &Self, end: &Self, percentage: f32) -> Self {
+        T::from ((*start + (*end - *start)).to_f32 ().unwrap () * percentage).unwrap ()
     }
 }
