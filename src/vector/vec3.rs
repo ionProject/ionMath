@@ -83,6 +83,20 @@ impl<V> Clamp for Vec3<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
+impl<V, U> From<U> for Vec3<V> where
+    V: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: U) -> Vec3<V> {
+
+        Vec3::new (V::from (value).unwrap (),
+                   V::from (value).unwrap (),
+                   V::from (value).unwrap ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
 impl<'a, V, U> From<&'a Vec2<U>> for Vec3<V> where
     V: Copy + Num + NumCast,
     U: Copy + Num + NumCast {
