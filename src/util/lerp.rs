@@ -22,20 +22,7 @@
 pub trait Lerp {
 
     /// Linearly interpolates between two values.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::util::Lerp;
-    /// println! ("{}", f32::lerp (&1.0, &7.5, 0.5));
-    /// ```
     fn lerp (start: &Self, end: &Self, percentage: f32) -> Self;
-
     /// Linearly interpolates between two values without clamping.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::util::Lerp;
-    /// println! ("{}", f32::lerp (&1.0, &7.5, 0.5));
-    /// ```
     fn lerp_unclamped (start: &Self, end: &Self, percentage: f32) -> Self;
 }
