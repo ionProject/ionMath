@@ -59,12 +59,6 @@ pub type Vec2i = Vec2<i32>;
 /// `Vec2<u32>`
 pub type Vec2u = Vec2<u32>;
 
-#[test]
-fn test () {
-
-    let vec = Vec2f::new (1, 1);
-}
-
 /*===============================================================================================*/
 /*------VEC2 TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
 /*===============================================================================================*/
@@ -141,18 +135,14 @@ impl<'a, V, U> From<&'a Vec4<U>> for Vec2<V> where
 impl<V> Lerp for Vec2<V> where
     V: Copy + Num + NumCast {
 
-    fn lerp (start: &Self, end: &Self, percentage: f32) -> Self {
-
-        Vec2::new (V::lerp (&start.x, &end.x, percentage),
-                   V::lerp (&start.y, &end.y, percentage))
+    fn lerp<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
+        (&(Vec2f::from (&(start + (end - start))) * percentage.clamp (0.0, 1.0))).into ()
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn lerp_unclamped (start: &Self, end: &Self, percentage: f32) -> Self {
-
-        Vec2::new (V::lerp_unclamped (&start.x, &end.x, percentage),
-                   V::lerp_unclamped (&start.y, &end.y, percentage))
+    fn lerp_unclamped<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
+        (&(Vec2f::from (&(start + (end - start))) * percentage)).into ()
     }
 }
 
