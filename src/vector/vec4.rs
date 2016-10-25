@@ -219,8 +219,8 @@ impl<V> VecTrait for Vec4<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec4, VecTrait};
-    /// let vec01 = Vec4::new (1.0, 3.0, 0.0, 5.0);
-    /// let vec02 = Vec4::new (4.0, 9.0, 0.0, 4.0);
+    /// let vec01 = Vec4::<f32>::new (1.0, 3.0, 0.0, 5.0);
+    /// let vec02 = Vec4::<f32>::new (4.0, 9.0, 0.0, 4.0);
     ///
     /// let dot_product = vec01.dot (&vec02);
     /// ```
@@ -245,8 +245,8 @@ impl<V> VecTraitF for Vec4<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec4, VecTraitF};
-    /// let vec01 = Vec4::new (1.0, 3.0, 0.0, 4.3);
-    /// let vec02 = Vec4::new (4.0, 9.0, 0.0, 1.0);
+    /// let vec01 = Vec4::<f32>::new (1.0, 3.0, 0.0, 4.3);
+    /// let vec02 = Vec4::<f32>::new (4.0, 9.0, 0.0, 1.0);
     ///
     /// let distance = vec01.distance (&vec02);
     /// ```
@@ -261,7 +261,7 @@ impl<V> VecTraitF for Vec4<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec4, VecTraitF};
-    /// let vec = Vec4::new (1.0, 3.0, 0.0, 6.0);
+    /// let vec = Vec4::<f32>::new (1.0, 3.0, 0.0, 6.0);
     /// let vec_length = vec.length ();
     /// ```
     fn length (&self) -> Self::ValTypeF {
@@ -279,7 +279,7 @@ impl<V> VecTraitF for Vec4<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec4, VecTraitF};
-    /// let vec = Vec4::new (3.0, 9.0, 0.0, 4.0);
+    /// let vec = Vec4::<f32>::new (3.0, 9.0, 0.0, 4.0);
     /// let vec_normalized = vec.normalize ();
     /// ```
     fn normalize (&self) -> Self {
@@ -590,14 +590,15 @@ impl<V> Vec4<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::Vec4;
-    /// let vec = Vec4::new (3, 7, 10, 9);
+    /// let vec = Vec4::<f32>::new (3, 7, 10, 9);
     /// ```
-    pub fn new (x: V, y: V, z: V, w: V) -> Vec4<V> {
+    pub fn new<C> (x: C, y: C, z: C, w: C) -> Vec4<V> where
+        C: Num + NumCast {
 
-        Vec4 {x: x,
-              y: y,
-              z: z,
-              w: w}
+        Vec4 {x: V::from (x).unwrap (),
+              y: V::from (y).unwrap (),
+              z: V::from (z).unwrap (),
+              w: V::from (w).unwrap ()}
     }
 
 /*-----------------------------------------------------------------------------------------------*/

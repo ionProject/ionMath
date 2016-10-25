@@ -209,8 +209,8 @@ impl<V> VecTrait for Vec3<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec3, VecTrait};
-    /// let vec01 = Vec3::new (1.0, 3.0, 0.0);
-    /// let vec02 = Vec3::new (4.0, 9.0, 0.0);
+    /// let vec01 = Vec3::<f32>::new (1.0, 3.0, 0.0);
+    /// let vec02 = Vec3::<f32>::new (4.0, 9.0, 0.0);
     ///
     /// let dot_product = vec01.dot (&vec02);
     /// ```
@@ -234,8 +234,8 @@ impl<V> VecTraitF for Vec3<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec3, VecTraitF};
-    /// let vec01 = Vec3::new (1.0, 3.0, 0.0);
-    /// let vec02 = Vec3::new (4.0, 9.0, 0.0);
+    /// let vec01 = Vec3::<f32>::new (1.0, 3.0, 0.0);
+    /// let vec02 = Vec3::<f32>::new (4.0, 9.0, 0.0);
     ///
     /// let distance = vec01.distance (&vec02);
     /// ```
@@ -250,7 +250,7 @@ impl<V> VecTraitF for Vec3<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec3, VecTraitF};
-    /// let vec = Vec3::new (1.0, 3.0, 0.0);
+    /// let vec = Vec3::<f32>::new (1.0, 3.0, 0.0);
     /// let vec_length = vec.length ();
     /// ```
     fn length (&self) -> Self::ValTypeF {
@@ -267,7 +267,7 @@ impl<V> VecTraitF for Vec3<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec3, VecTraitF};
-    /// let vec = Vec3::new (3.0, 9.0, 0.0);
+    /// let vec = Vec3::<f32>::new (3.0, 9.0, 0.0);
     /// let vec_normalized = vec.normalize ();
     /// ```
     fn normalize (&self) -> Self {
@@ -559,8 +559,8 @@ impl<V> Vec3<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::Vec3;
-    /// let vec01 = Vec3::new (1, 3, 6);
-    /// let vec02 = Vec3::new (4, 9, 2);
+    /// let vec01 = Vec3::<f32>::new (1, 3, 6);
+    /// let vec02 = Vec3::<f32>::new (4, 9, 2);
     ///
     /// let cross_product = vec01.cross (&vec02);
     /// ```
@@ -578,13 +578,14 @@ impl<V> Vec3<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::Vec3;
-    /// let vec = Vec3::new (3, 7, 10);
+    /// let vec = Vec3::<f32>::new (3, 7, 10);
     /// ```
-    pub fn new (x: V, y: V, z: V) -> Vec3<V> {
+    pub fn new<C> (x: C, y: C, z: C) -> Vec3<V> where
+        C: Num + NumCast {
 
-        Vec3 {x: x,
-              y: y,
-              z: z}
+        Vec3 {x: V::from (x).unwrap (),
+              y: V::from (y).unwrap (),
+              z: V::from (z).unwrap ()}
     }
 
 /*-----------------------------------------------------------------------------------------------*/

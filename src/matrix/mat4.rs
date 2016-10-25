@@ -176,20 +176,21 @@ impl<T> Mat4<T> where
     /// # Examples
     /// ```
     /// # use ion_math::matrix::Mat4;
-    /// let mat = Mat4::new (1,  2,  3,  4,
-    ///                      5,  6,  7,  8,
-    ///                      9,  10, 11, 12,
-    ///                      13, 14, 15, 16);
+    /// let mat = Mat4::<f32>::new (1,  2,  3,  4,
+    ///                             5,  6,  7,  8,
+    ///                             9,  10, 11, 12,
+    ///                             13, 14, 15, 16);
     /// ```
-    pub fn new (m11: T, m12: T, m13: T, m14: T,
-                m21: T, m22: T, m23: T, m24: T,
-                m31: T, m32: T, m33: T, m34: T,
-                m41: T, m42: T, m43: T, m44: T,) -> Self {
+    pub fn new<C> (m11: C, m12: C, m13: C, m14: C,
+                   m21: C, m22: C, m23: C, m24: C,
+                   m31: C, m32: C, m33: C, m34: C,
+                   m41: C, m42: C, m43: C, m44: C,) -> Self where
+        C: Num + NumCast {
 
-        Mat4 {array: [Vec4::new (m11, m12, m13, m14),
-                      Vec4::new (m21, m22, m23, m24),
-                      Vec4::new (m31, m32, m33, m34),
-                      Vec4::new (m41, m42, m43, m44)]}
+        Mat4 {array: [Vec4::new (T::from (m11).unwrap (), T::from (m12).unwrap (), T::from (m13).unwrap (), T::from (m14).unwrap ()),
+                      Vec4::new (T::from (m21).unwrap (), T::from (m22).unwrap (), T::from (m23).unwrap (), T::from (m24).unwrap ()),
+                      Vec4::new (T::from (m31).unwrap (), T::from (m32).unwrap (), T::from (m33).unwrap (), T::from (m34).unwrap ()),
+                      Vec4::new (T::from (m41).unwrap (), T::from (m42).unwrap (), T::from (m43).unwrap (), T::from (m44).unwrap ())]}
     }
 
 /*-----------------------------------------------------------------------------------------------*/

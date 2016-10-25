@@ -18,7 +18,7 @@
 extern crate num_traits;
 
 // Module imports
-use self::num_traits::{Float, NumCast};
+use self::num_traits::{Float, Num, NumCast};
 
 use ::angle::Deg;
 use ::util::Clamp;
@@ -76,10 +76,11 @@ impl<V> Rad<V> where
     /// # Examples
     /// ```
     /// # use ion_math::angle::{Deg, Rad};
-    /// let rad = Rad::<f64>::new (2.641);
+    /// let rad = Rad::<f32>::new (2.641);
     /// ```
-    pub fn new (value: V) -> Rad<V> {
+    pub fn new<C> (value: C) -> Rad<V> where
+        C: Num + NumCast {
 
-        Rad {value: value}
+        Rad {value: V::from (value).unwrap ()}
     }
 }

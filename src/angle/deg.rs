@@ -18,7 +18,7 @@
 extern crate num_traits;
 
 // Module imports
-use self::num_traits::{Float, NumCast};
+use self::num_traits::{Float, Num, NumCast};
 
 use ::angle::Rad;
 use ::util::Clamp;
@@ -76,10 +76,11 @@ impl<V> Deg<V> where
     /// # Examples
     /// ```
     /// # use ion_math::angle::Deg;
-    /// let deg = Deg::new (45.0);
+    /// let deg = Deg::<f32>::new (45.0);
     /// ```
-    pub fn new (value: V) -> Deg<V> {
+    pub fn new<C> (value: C) -> Deg<V> where
+        C: Num + NumCast {
 
-        Deg {value: value}
+        Deg {value: V::from (value).unwrap ()}
     }
 }

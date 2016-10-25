@@ -55,7 +55,7 @@ pub type Mat3u = Mat3<u32>;
 /*===============================================================================================*/
 
 impl<T> From<T> for Mat3<T> where
-    T: Copy + Num + NumCast {
+    T: Copy + Num + NumCast, {
 
     fn from (value: T) -> Self {
 
@@ -173,17 +173,18 @@ impl<T> Mat3<T> where
     /// # Examples
     /// ```
     /// # use ion_math::matrix::Mat3;
-    /// let mat = Mat3::new (1, 2, 3,
-    ///                      4, 5, 6,
-    ///                      7, 8, 9);
+    /// let mat = Mat3::<f32>::new (1, 2, 3,
+    ///                             4, 5, 6,
+    ///                             7, 8, 9);
     /// ```
-    pub fn new (m11: T, m12: T, m13: T,
-                m21: T, m22: T, m23: T,
-                m31: T, m32: T, m33: T) -> Self {
+    pub fn new<C> (m11: C, m12: C, m13: C,
+                   m21: C, m22: C, m23: C,
+                   m31: C, m32: C, m33: C) -> Self where
+        C: Num + NumCast {
 
-        Mat3 {array: [Vec3::new (m11, m12, m13),
-                      Vec3::new (m21, m22, m23),
-                      Vec3::new (m31, m32, m33)]}
+        Mat3 {array: [Vec3::new (T::from (m11).unwrap (), T::from (m12).unwrap (), T::from (m13).unwrap ()),
+                      Vec3::new (T::from (m21).unwrap (), T::from (m22).unwrap (), T::from (m23).unwrap ()),
+                      Vec3::new (T::from (m31).unwrap (), T::from (m32).unwrap (), T::from (m33).unwrap ())]}
     }
 
 /*-----------------------------------------------------------------------------------------------*/

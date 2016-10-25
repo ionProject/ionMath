@@ -79,10 +79,15 @@ impl Default for RGBA {
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl From<f32> for RGBA {
+impl<C> From<C> for RGBA where
+    C: Num + NumCast {
 
-    fn from (value: f32) -> Self {
-        RGBA::new (value, value, value, value)
+    fn from (value: C) -> Self {
+
+        RGBA::new (value.to_f32 ().unwrap (),
+                   value.to_f32 ().unwrap (),
+                   value.to_f32 ().unwrap (),
+                   value.to_f32 ().unwrap ())
     }
 }
 
@@ -315,6 +320,7 @@ impl ColourTrait for RGBA {
 /*===============================================================================================*/
 
 impl RGBA {
+
     /// Returns a new `RGBA` instance.
     ///
     /// # Examples
@@ -322,7 +328,12 @@ impl RGBA {
     /// # use ion_math::colour::RGBA;
     /// let colour = RGBA::new (0.0, 1.0, 0.5, 1.0);
     /// ```
-    pub fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
-        RGBA { r: r, g: g, b: b, a: a }
+    pub fn new<T> (r: T, g: T, b: T, a: T) -> Self where
+        T: Num + NumCast {
+
+        RGBA {r: r.to_f32 ().unwrap (),
+              g: g.to_f32 ().unwrap (),
+              b: b.to_f32 ().unwrap (),
+              a: a.to_f32 ().unwrap ()}
     }
 }

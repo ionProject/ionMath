@@ -59,6 +59,12 @@ pub type Vec2i = Vec2<i32>;
 /// `Vec2<u32>`
 pub type Vec2u = Vec2<u32>;
 
+#[test]
+fn test () {
+
+    let vec = Vec2f::new (1, 1);
+}
+
 /*===============================================================================================*/
 /*------VEC2 TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
 /*===============================================================================================*/
@@ -197,8 +203,8 @@ impl<V> VecTrait for Vec2<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec2, VecTrait};
-    /// let vec01 = Vec2::new (1.0, 3.0);
-    /// let vec02 = Vec2::new (4.0, 9.0);
+    /// let vec01 = Vec2::<f32>::new (1.0, 3.0);
+    /// let vec02 = Vec2::<f32>::new (4.0, 9.0);
     ///
     /// let dot_product = vec01.dot (&vec02);
     /// ```
@@ -221,8 +227,8 @@ impl<V> VecTraitF for Vec2<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec2, VecTraitF};
-    /// let vec01 = Vec2::new (1.0, 3.0);
-    /// let vec02 = Vec2::new (4.0, 9.0);
+    /// let vec01 = Vec2::<f32>::new (1.0, 3.0);
+    /// let vec02 = Vec2::<f32>::new (4.0, 9.0);
     ///
     /// let distance = vec01.distance (&vec02);
     /// ```
@@ -237,7 +243,7 @@ impl<V> VecTraitF for Vec2<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec2, VecTraitF};
-    /// let vec = Vec2::new (1.0, 3.0);
+    /// let vec = Vec2::<f32>::new (1.0, 3.0);
     /// let vec_length = vec.length ();
     /// ```
     fn length (&self) -> Self::ValTypeF {
@@ -253,7 +259,7 @@ impl<V> VecTraitF for Vec2<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::{Vec2, VecTraitF};
-    /// let vec = Vec2::new (3.0, 9.0);
+    /// let vec = Vec2::<f32>::new (3.0, 9.0);
     /// let vec_normalized = vec.normalize ();
     /// ```
     fn normalize (&self) -> Self {
@@ -526,12 +532,13 @@ impl<V> Vec2<V> where
     /// # Examples
     /// ```
     /// # use ion_math::vector::Vec2;
-    /// let vec = Vec2::new (3, 7);
+    /// let vec = Vec2::<f32>::new (3, 7);
     /// ```
-    pub fn new (x: V, y: V) -> Vec2<V> {
+    pub fn new<C> (x: C, y: C) -> Vec2<V> where
+        C: Num + NumCast {
 
-        Vec2 {x: x,
-              y: y}
+        Vec2 {x: V::from (x).unwrap (),
+              y: V::from (y).unwrap ()}
     }
 
 /*-----------------------------------------------------------------------------------------------*/
