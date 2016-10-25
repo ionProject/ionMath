@@ -127,6 +127,81 @@ impl<T> Mul for Mat3<T> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
+impl<'a, T> Mul<&'a Mat3<T>> for Mat3<T> where
+    T: AddAssign + Copy + Num + NumCast {
+
+    type Output = Self;
+
+    fn mul (self, rhs: &Self) -> Self::Output {
+
+        let mut m = Mat3::zero ();
+
+        for row in 0..3 {
+
+            for col in 0..3 {
+
+                for inner in 0..3 {
+                    m[row][col] += self[row][inner] * rhs[inner][col]
+                }
+            }
+        }
+
+        m
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Mul<Mat3<T>> for &'a Mat3<T> where
+    T: AddAssign + Copy + Num + NumCast {
+
+    type Output = Mat3<T>;
+
+    fn mul (self, rhs: Mat3<T>) -> Self::Output {
+
+        let mut m = Mat3::zero ();
+
+        for row in 0..3 {
+
+            for col in 0..3 {
+
+                for inner in 0..3 {
+                    m[row][col] += self[row][inner] * rhs[inner][col]
+                }
+            }
+        }
+
+        m
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Mul for &'a Mat3<T> where
+    T: AddAssign + Copy + Num + NumCast {
+
+    type Output = Mat3<T>;
+
+    fn mul (self, rhs: Self) -> Self::Output {
+
+        let mut m = Mat3::zero ();
+
+        for row in 0..3 {
+
+            for col in 0..3 {
+
+                for inner in 0..3 {
+                    m[row][col] += self[row][inner] * rhs[inner][col]
+                }
+            }
+        }
+
+        m
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
 impl<T> Index<u8> for Mat3<T> where
     T: Copy + Num + NumCast {
 

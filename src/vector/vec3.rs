@@ -304,7 +304,67 @@ impl<V> Add for Vec3<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
+impl<'a, V> Add<&'a Vec3<V>> for Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn add (self, rhs: &Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x + rhs.x,
+                   self.y + rhs.y,
+                   self.z + rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Add<Vec3<V>> for &'a Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn add (self, rhs: Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x + rhs.x,
+                   self.y + rhs.y,
+                   self.z + rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Add for &'a Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn add (self, rhs: &Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x + rhs.x,
+                   self.y + rhs.y,
+                   self.z + rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
 impl<V> Add<V> for Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn add (self, rhs: V) -> Vec3<V> {
+
+        Vec3::new (self.x + rhs,
+                   self.y + rhs,
+                   self.z + rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Add<V> for &'a Vec3<V> where
     V: Copy + Num + NumCast {
 
     type Output = Vec3<V>;
@@ -360,7 +420,67 @@ impl<V> Sub for Vec3<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
+impl<'a, V> Sub<&'a Vec3<V>> for Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn sub (self, rhs: &Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x - rhs.x,
+                   self.y - rhs.y,
+                   self.z - rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Sub<Vec3<V>> for &'a Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn sub (self, rhs: Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x - rhs.x,
+                   self.y - rhs.y,
+                   self.z - rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Sub for &'a Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn sub (self, rhs: &Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x - rhs.x,
+                   self.y - rhs.y,
+                   self.z - rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
 impl<V> Sub<V> for Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn sub (self, rhs: V) -> Vec3<V> {
+
+        Vec3::new (self.x - rhs,
+                   self.y - rhs,
+                   self.z - rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Sub<V> for &'a Vec3<V> where
     V: Copy + Num + NumCast {
 
     type Output = Vec3<V>;
@@ -416,7 +536,67 @@ impl<V> Mul for Vec3<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
+impl<'a, V> Mul<&'a Vec3<V>> for Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn mul (self, rhs: &Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x * rhs.x,
+                   self.y * rhs.y,
+                   self.z * rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Mul<Vec3<V>> for &'a Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn mul (self, rhs: Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x * rhs.x,
+                   self.y * rhs.y,
+                   self.z * rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Mul for &'a Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn mul (self, rhs: &Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x * rhs.x,
+                   self.y * rhs.y,
+                   self.z * rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
 impl<V> Mul<V> for Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn mul (self, rhs: V) -> Vec3<V> {
+
+        Vec3::new (self.x * rhs,
+                   self.y * rhs,
+                   self.z * rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Mul<V> for &'a Vec3<V> where
     V: Copy + Num + NumCast {
 
     type Output = Vec3<V>;
@@ -472,7 +652,67 @@ impl<V> Div for Vec3<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
+impl<'a, V> Div<&'a Vec3<V>> for Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn div (self, rhs: &Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x / rhs.x,
+                   self.y / rhs.y,
+                   self.z / rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Div<Vec3<V>> for &'a Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn div (self, rhs: Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x / rhs.x,
+                   self.y / rhs.y,
+                   self.z / rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Div for &'a Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn div (self, rhs: &Vec3<V>) -> Vec3<V> {
+
+        Vec3::new (self.x / rhs.x,
+                   self.y / rhs.y,
+                   self.z / rhs.z)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
 impl<V> Div<V> for Vec3<V> where
+    V: Copy + Num + NumCast {
+
+    type Output = Vec3<V>;
+
+    fn div (self, rhs: V) -> Vec3<V> {
+
+        Vec3::new (self.x / rhs,
+                   self.y / rhs,
+                   self.z / rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, V> Div<V> for &'a Vec3<V> where
     V: Copy + Num + NumCast {
 
     type Output = Vec3<V>;
