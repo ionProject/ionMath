@@ -24,6 +24,11 @@ use ::colour::ColourTrait;
 use ::util::{Clamp, Lerp};
 use ::vector::{Vec2, Vec3, Vec4};
 
+use std::ops::{Add,   AddAssign,
+               Sub,   SubAssign,
+               Mul,   MulAssign,
+               Div,   DivAssign,
+               Index, IndexMut};
 use std::convert::From;
 
 /*===============================================================================================*/
@@ -135,21 +140,16 @@ impl<'a, T> From<&'a Vec4<T>> for RGBA where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-// TODO: Finish lerp implementation
 impl Lerp for RGBA {
 
-    fn lerp (_start: &Self, _end: &Self, _percentage: f32) -> Self {
-
-        unimplemented! ()
-        //start + (end - start) * percentage.clamp (0.0, 1.0)
+    fn lerp<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
+        start + (end - start) * percentage.clamp (0.0, 1.0)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn lerp_unclamped (_start: &Self, _end: &Self, _percentage: f32) -> Self {
-
-        unimplemented! ()
-        //start + (end - start) * percentage
+    fn lerp_unclamped<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
+        start + (end - start) * percentage
     }
 }
 
@@ -309,6 +309,508 @@ impl ColourTrait for RGBA {
     /// ```
     fn transparent () -> Self {
         RGBA::from (0.0)
+    }
+}
+
+/*===============================================================================================*/
+/*------RGBA OPERATORS---------------------------------------------------------------------------*/
+/*===============================================================================================*/
+
+impl Add for RGBA {
+
+    type Output = RGBA;
+
+    fn add (self, rhs: RGBA) -> RGBA {
+
+        RGBA::new (self.r + rhs.r,
+                   self.g + rhs.g,
+                   self.b + rhs.b,
+                   self.a + rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Add<&'a RGBA> for RGBA {
+
+    type Output = RGBA;
+
+    fn add (self, rhs: &RGBA) -> RGBA {
+
+        RGBA::new (self.r + rhs.r,
+                   self.g + rhs.g,
+                   self.b + rhs.b,
+                   self.a + rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Add<RGBA> for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn add (self, rhs: RGBA) -> RGBA {
+
+        RGBA::new (self.r + rhs.r,
+                   self.g + rhs.g,
+                   self.b + rhs.b,
+                   self.a + rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Add for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn add (self, rhs: &RGBA) -> RGBA {
+
+        RGBA::new (self.r + rhs.r,
+                   self.g + rhs.g,
+                   self.b + rhs.b,
+                   self.a + rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl Add<f32> for RGBA {
+
+    type Output = RGBA;
+
+    fn add (self, rhs: f32) -> RGBA {
+
+        RGBA::new (self.r + rhs,
+                   self.g + rhs,
+                   self.b + rhs,
+                   self.a + rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Add<f32> for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn add (self, rhs: f32) -> RGBA {
+
+        RGBA::new (self.r + rhs,
+                   self.g + rhs,
+                   self.b + rhs,
+                   self.a + rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl AddAssign for RGBA {
+
+    fn add_assign (&mut self, rhs: RGBA) {
+
+        self.r += rhs.r;
+        self.g += rhs.g;
+        self.b += rhs.b;
+        self.a += rhs.a;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl AddAssign<f32> for RGBA {
+
+    fn add_assign (&mut self, rhs: f32) {
+
+        self.r += rhs;
+        self.g += rhs;
+        self.b += rhs;
+        self.a += rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl Sub for RGBA {
+
+    type Output = RGBA;
+
+    fn sub (self, rhs: RGBA) -> RGBA {
+
+        RGBA::new (self.r - rhs.r,
+                   self.g - rhs.g,
+                   self.b - rhs.b,
+                   self.a - rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Sub<&'a RGBA> for RGBA {
+
+    type Output = RGBA;
+
+    fn sub (self, rhs: &RGBA) -> RGBA {
+
+        RGBA::new (self.r - rhs.r,
+                   self.g - rhs.g,
+                   self.b - rhs.b,
+                   self.a - rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Sub<RGBA> for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn sub (self, rhs: RGBA) -> RGBA {
+
+        RGBA::new (self.r - rhs.r,
+                   self.g - rhs.g,
+                   self.b - rhs.b,
+                   self.a - rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Sub for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn sub (self, rhs: &RGBA) -> RGBA {
+
+        RGBA::new (self.r - rhs.r,
+                   self.g - rhs.g,
+                   self.b - rhs.b,
+                   self.a - rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl Sub<f32> for RGBA {
+
+    type Output = RGBA;
+
+    fn sub (self, rhs: f32) -> RGBA {
+
+        RGBA::new (self.r - rhs,
+                   self.g - rhs,
+                   self.b - rhs,
+                   self.a - rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Sub<f32> for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn sub (self, rhs: f32) -> RGBA {
+
+        RGBA::new (self.r - rhs,
+                   self.g - rhs,
+                   self.b - rhs,
+                   self.a - rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl SubAssign for RGBA {
+
+    fn sub_assign (&mut self, rhs: RGBA) {
+
+        self.r -= rhs.r;
+        self.g -= rhs.g;
+        self.b -= rhs.b;
+        self.a -= rhs.a;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl SubAssign<f32> for RGBA {
+
+    fn sub_assign (&mut self, rhs: f32) {
+
+        self.r -= rhs;
+        self.g -= rhs;
+        self.b -= rhs;
+        self.a -= rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl Mul for RGBA {
+
+    type Output = RGBA;
+
+    fn mul (self, rhs: RGBA) -> RGBA {
+
+        RGBA::new (self.r * rhs.r,
+                   self.g * rhs.g,
+                   self.b * rhs.b,
+                   self.a * rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Mul<&'a RGBA> for RGBA {
+
+    type Output = RGBA;
+
+    fn mul (self, rhs: &RGBA) -> RGBA {
+
+        RGBA::new (self.r * rhs.r,
+                   self.g * rhs.g,
+                   self.b * rhs.b,
+                   self.a * rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Mul<RGBA> for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn mul (self, rhs: RGBA) -> RGBA {
+
+        RGBA::new (self.r * rhs.r,
+                   self.g * rhs.g,
+                   self.b * rhs.b,
+                   self.a * rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Mul for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn mul (self, rhs: &RGBA) -> RGBA {
+
+        RGBA::new (self.r * rhs.r,
+                   self.g * rhs.g,
+                   self.b * rhs.b,
+                   self.a * rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl Mul<f32> for RGBA {
+
+    type Output = RGBA;
+
+    fn mul (self, rhs: f32) -> RGBA {
+
+        RGBA::new (self.r * rhs,
+                   self.g * rhs,
+                   self.b * rhs,
+                   self.a * rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Mul<f32> for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn mul (self, rhs: f32) -> RGBA {
+
+        RGBA::new (self.r * rhs,
+                   self.g * rhs,
+                   self.b * rhs,
+                   self.a * rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl MulAssign for RGBA {
+
+    fn mul_assign (&mut self, rhs: RGBA) {
+
+        self.r *= rhs.r;
+        self.g *= rhs.g;
+        self.b *= rhs.b;
+        self.a *= rhs.a;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl MulAssign<f32> for RGBA {
+
+    fn mul_assign (&mut self, rhs: f32) {
+
+        self.r *= rhs;
+        self.g *= rhs;
+        self.b *= rhs;
+        self.a *= rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl Div for RGBA{
+
+    type Output = RGBA;
+
+    fn div (self, rhs: RGBA) -> RGBA {
+
+        RGBA::new (self.r / rhs.r,
+                   self.g / rhs.g,
+                   self.b / rhs.b,
+                   self.a / rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Div<&'a RGBA> for RGBA {
+
+    type Output = RGBA;
+
+    fn div (self, rhs: &RGBA) -> RGBA {
+
+        RGBA::new (self.r / rhs.r,
+                   self.g / rhs.g,
+                   self.b / rhs.b,
+                   self.a / rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Div<RGBA> for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn div (self, rhs: RGBA) -> RGBA {
+
+        RGBA::new (self.r / rhs.r,
+                   self.g / rhs.g,
+                   self.b / rhs.b,
+                   self.a / rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Div for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn div (self, rhs: &RGBA) -> RGBA {
+
+        RGBA::new (self.r / rhs.r,
+                   self.g / rhs.g,
+                   self.b / rhs.b,
+                   self.a / rhs.a)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl Div<f32> for RGBA {
+
+    type Output = RGBA;
+
+    fn div (self, rhs: f32) -> RGBA {
+
+        RGBA::new (self.r / rhs,
+                   self.g / rhs,
+                   self.b / rhs,
+                   self.a / rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a> Div<f32> for &'a RGBA {
+
+    type Output = RGBA;
+
+    fn div (self, rhs: f32) -> RGBA {
+
+        RGBA::new (self.r / rhs,
+                   self.g / rhs,
+                   self.b / rhs,
+                   self.a / rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl DivAssign for RGBA {
+
+    fn div_assign (&mut self, rhs: RGBA) {
+
+        self.r /= rhs.r;
+        self.g /= rhs.g;
+        self.b /= rhs.b;
+        self.a /= rhs.a;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl DivAssign<f32> for RGBA {
+
+    fn div_assign (&mut self, rhs: f32) {
+
+        self.r /= rhs;
+        self.g /= rhs;
+        self.b /= rhs;
+        self.a /= rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl Index<u8> for RGBA {
+
+    type Output = f32;
+
+    fn index (&self, index: u8) -> &f32 {
+
+        match index {
+
+            0 => &self.r,
+            1 => &self.g,
+            2 => &self.b,
+            3 => &self.a,
+            _ => unreachable! ("Index out of range for RGBA")
+        }
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl IndexMut<u8> for RGBA {
+
+    fn index_mut (&mut self, index: u8) -> &mut f32 {
+
+        match index {
+
+            0 => &mut self.r,
+            1 => &mut self.g,
+            2 => &mut self.b,
+            3 => &mut self.a,
+            _ => unreachable! ("Index out of range for RGBA")
+        }
     }
 }
 

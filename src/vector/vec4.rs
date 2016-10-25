@@ -24,10 +24,10 @@ use ::vector::{Vec2, Vec3, VecTrait, VecTraitF};
 use ::util::{Clamp, Lerp, MinMax};
 
 use std::ops::{Add,   AddAssign,
-    Sub,   SubAssign,
-    Mul,   MulAssign,
-    Div,   DivAssign,
-    Index, IndexMut};
+               Sub,   SubAssign,
+               Mul,   MulAssign,
+               Div,   DivAssign,
+               Index, IndexMut};
 use std::convert::From;
 
 /*===============================================================================================*/
