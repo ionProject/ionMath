@@ -47,7 +47,7 @@ pub struct Rad<V> where
 impl<V> Clamp for Rad<V> where
     V: Float {
 
-    fn clamp (&self, min: &Self, max: &Self) -> Self {
+    fn clamp (&self, min: &Rad<V>, max: &Rad<V>) -> Rad<V> {
 
         debug_assert! (min < max, "Min cannot be greater than max.");
         if self < min {*min} else if self > max {*max} else {*self}

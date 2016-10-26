@@ -66,7 +66,7 @@ pub type Vec4u = Vec4<u32>;
 impl<V> Clamp for Vec4<V> where
     V: Copy + Num + NumCast + PartialOrd {
 
-    fn clamp (&self, min: &Self, max: &Self) -> Self {
+    fn clamp (&self, min: &Vec4<V>, max: &Vec4<V>) -> Vec4<V> {
 
         debug_assert! (min.x < max.x, "Min cannot be greater than max.");
         debug_assert! (min.y < max.y, "Min cannot be greater than max.");
@@ -145,13 +145,13 @@ impl<'a, V, U> From<&'a Vec4<U>> for Vec4<V> where
 impl<V> Lerp for Vec4<V> where
     V: Copy + Num + NumCast {
 
-    fn lerp<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
+    fn lerp<'a> (start: &'a Vec4<V>, end: &'a Vec4<V>, percentage: f32) -> Vec4<V> {
         (&(Vec4f::from (&(start + (end - start))) * percentage.clamp (&0.0, &1.0))).into ()
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn lerp_unclamped<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
+    fn lerp_unclamped<'a> (start: &'a Vec4<V>, end: &'a Vec4<V>, percentage: f32) -> Vec4<V> {
         (&(Vec4f::from (&(start + (end - start))) * percentage)).into ()
     }
 }
@@ -161,7 +161,7 @@ impl<V> Lerp for Vec4<V> where
 impl<V> MinMax for Vec4<V> where
     V: Copy + Num + NumCast + PartialOrd {
 
-    fn max (lhs: &Self, rhs: &Self) -> Self {
+    fn max (lhs: &Vec4<V>, rhs: &Vec4<V>) -> Vec4<V> {
 
         Vec4::new (if lhs.x > rhs.x {lhs.x} else {rhs.x},
                    if lhs.y > rhs.y {lhs.y} else {rhs.y},
@@ -171,7 +171,7 @@ impl<V> MinMax for Vec4<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn min (lhs: &Self, rhs: &Self) -> Self {
+    fn min (lhs: &Vec4<V>, rhs: &Vec4<V>) -> Vec4<V> {
 
         Vec4::new (if lhs.x < rhs.x {lhs.x} else {rhs.x},
                    if lhs.y < rhs.y {lhs.y} else {rhs.y},
@@ -194,7 +194,7 @@ impl<V> VecTrait for Vec4<V> where
     /// # use ion_math::vector::{Vec4, VecTrait};
     /// let vec = Vec4::<f32>::zero ();
     /// ```
-    fn zero () -> Self {
+    fn zero () -> Vec4<V> {
 
         Vec4::new (V::zero (),
                    V::zero (),
@@ -214,7 +214,7 @@ impl<V> VecTrait for Vec4<V> where
     ///
     /// let dot_product = vec01.dot (&vec02);
     /// ```
-    fn dot (&self, rhs: &Self) -> Self::ValType {
+    fn dot (&self, rhs: &Vec4<V>) -> V {
 
         (self.x * rhs.x) +
         (self.y * rhs.y) +
@@ -240,7 +240,7 @@ impl<V> VecTraitF for Vec4<V> where
     ///
     /// let distance = vec01.distance (&vec02);
     /// ```
-    fn distance (&self, rhs: &Self) -> Self::ValTypeF {
+    fn distance (&self, rhs: &Vec4<V>) -> V {
         (*self - *rhs).length ()
     }
 
@@ -254,7 +254,7 @@ impl<V> VecTraitF for Vec4<V> where
     /// let vec = Vec4::<f32>::new (1.0, 3.0, 0.0, 6.0);
     /// let vec_length = vec.length ();
     /// ```
-    fn length (&self) -> Self::ValTypeF {
+    fn length (&self) -> V {
 
         (self.x * self.x +
             self.y * self.y +
@@ -272,7 +272,7 @@ impl<V> VecTraitF for Vec4<V> where
     /// let vec = Vec4::<f32>::new (3.0, 9.0, 0.0, 4.0);
     /// let vec_normalized = vec.normalize ();
     /// ```
-    fn normalize (&self) -> Self {
+    fn normalize (&self) -> Vec4<V> {
 
         let length = self.length ();
 

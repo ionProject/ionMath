@@ -38,7 +38,7 @@ pub trait Clamp {
 impl<T> Clamp for T where
     T: Copy + Num + PartialOrd {
 
-    fn clamp (&self, min: &Self, max: &Self) -> Self {
+    fn clamp (&self, min: &T, max: &T) -> T {
 
         debug_assert! (min < max, "Min cannot be greater than max.");
         if self < min {*min} else if self > max {*max} else {*self}

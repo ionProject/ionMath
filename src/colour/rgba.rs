@@ -57,7 +57,7 @@ pub struct RGBA {
 
 impl Clamp for RGBA {
 
-    fn clamp (&self, min: &Self, max: &Self) -> Self {
+    fn clamp (&self, min: &RGBA, max: &RGBA) -> RGBA {
 
         debug_assert! (min.r < max.r, "Min cannot be greater than max.");
         debug_assert! (min.g < max.g, "Min cannot be greater than max.");
@@ -75,7 +75,7 @@ impl Clamp for RGBA {
 
 impl Default for RGBA {
 
-    fn default () -> Self {
+    fn default () -> RGBA {
         RGBA::from (1.0)
     }
 }
@@ -85,7 +85,7 @@ impl Default for RGBA {
 impl<C> From<C> for RGBA where
     C: Num + NumCast {
 
-    fn from (value: C) -> Self {
+    fn from (value: C) -> RGBA {
 
         RGBA::new (value.to_f32 ().unwrap (),
                    value.to_f32 ().unwrap (),
@@ -99,7 +99,7 @@ impl<C> From<C> for RGBA where
 impl<'a, T> From<&'a Vec2<T>> for RGBA where
     T: Copy + Num + NumCast {
 
-    fn from (value: &Vec2<T>) -> Self {
+    fn from (value: &Vec2<T>) -> RGBA {
 
         RGBA::new (value.x.to_f32 ().unwrap (),
                    value.y.to_f32 ().unwrap (),
@@ -112,7 +112,7 @@ impl<'a, T> From<&'a Vec2<T>> for RGBA where
 impl<'a, T> From<&'a Vec3<T>> for RGBA where
     T: Copy + Num + NumCast {
 
-    fn from (value: &Vec3<T>) -> Self {
+    fn from (value: &Vec3<T>) -> RGBA {
 
         RGBA::new (value.x.to_f32 ().unwrap (),
                    value.y.to_f32 ().unwrap (),
@@ -127,7 +127,7 @@ impl<'a, T> From<&'a Vec4<T>> for RGBA where
     T: Copy + Num + NumCast {
 
 
-    fn from (value: &Vec4<T>) -> Self {
+    fn from (value: &Vec4<T>) -> RGBA {
 
         RGBA::new (value.x.to_f32 ().unwrap (),
                    value.y.to_f32 ().unwrap (),
@@ -140,13 +140,13 @@ impl<'a, T> From<&'a Vec4<T>> for RGBA where
 
 impl Lerp for RGBA {
 
-    fn lerp<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
+    fn lerp<'a> (start: &'a RGBA, end: &'a RGBA, percentage: f32) -> RGBA {
         start + (end - start) * percentage.clamp (&0.0, &1.0)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn lerp_unclamped<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
+    fn lerp_unclamped<'a> (start: &'a RGBA, end: &'a RGBA, percentage: f32) -> RGBA {
         start + (end - start) * percentage
     }
 }
@@ -162,7 +162,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::black ();
     /// ```
-    fn black () -> Self {
+    fn black () -> RGBA {
         RGBA::new (0.0, 0.0, 0.0, 1.0)
     }
 
@@ -175,7 +175,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::light_grey ();
     /// ```
-    fn light_grey () -> Self {
+    fn light_grey () -> RGBA {
         RGBA::new (0.75, 0.75, 0.75, 1.0)
     }
 
@@ -188,7 +188,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::grey ();
     /// ```
-    fn grey () -> Self {
+    fn grey () -> RGBA {
         RGBA::new (0.5, 0.5, 0.5, 1.0)
     }
 
@@ -201,7 +201,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::dark_grey ();
     /// ```
-    fn dark_grey () -> Self {
+    fn dark_grey () -> RGBA {
         RGBA::new (0.25, 0.25, 0.25, 1.0)
     }
 
@@ -214,7 +214,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::white ();
     /// ```
-    fn white () -> Self {
+    fn white () -> RGBA {
         RGBA::from (1.0)
     }
 
@@ -227,7 +227,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::red ();
     /// ```
-    fn red () -> Self {
+    fn red () -> RGBA {
         RGBA::new (1.0, 0.0, 0.0, 1.0)
     }
 
@@ -240,7 +240,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::green ();
     /// ```
-    fn green () -> Self {
+    fn green () -> RGBA {
         RGBA::new (0.0, 1.0, 0.0, 1.0)
     }
 
@@ -253,7 +253,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::blue ();
     /// ```
-    fn blue () -> Self {
+    fn blue () -> RGBA {
         RGBA::new (0.0, 0.0, 1.0, 1.0)
     }
 
@@ -266,7 +266,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::yellow ();
     /// ```
-    fn yellow () -> Self {
+    fn yellow () -> RGBA {
         RGBA::new (1.0, 1.0, 0.0, 1.0)
     }
 
@@ -279,7 +279,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::cyan ();
     /// ```
-    fn cyan () -> Self {
+    fn cyan () -> RGBA {
         RGBA::new (0.0, 1.0, 1.0, 1.0)
     }
 
@@ -292,7 +292,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::magenta ();
     /// ```
-    fn magenta () -> Self {
+    fn magenta () -> RGBA {
         RGBA::new (1.0, 0.0, 1.0, 1.0)
     }
 
@@ -305,7 +305,7 @@ impl ColourTrait for RGBA {
     /// # use ion_math::colour::{ColourTrait, RGBA};
     /// let colour = RGBA::transparent ();
     /// ```
-    fn transparent () -> Self {
+    fn transparent () -> RGBA {
         RGBA::from (0.0)
     }
 }
@@ -825,7 +825,7 @@ impl RGBA {
     /// # use ion_math::colour::RGBA;
     /// let colour = RGBA::new (0.0, 1.0, 0.5, 1.0);
     /// ```
-    pub fn new<T> (r: T, g: T, b: T, a: T) -> Self where
+    pub fn new<T> (r: T, g: T, b: T, a: T) -> RGBA where
         T: Num + NumCast {
 
         RGBA {r: r.to_f32 ().unwrap (),

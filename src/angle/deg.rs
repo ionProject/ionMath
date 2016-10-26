@@ -47,7 +47,7 @@ pub struct Deg<V> where
 impl<V> Clamp for Deg<V> where
     V: Float {
 
-    fn clamp (&self, min: &Self, max: &Self) -> Self {
+    fn clamp (&self, min: &Deg<V>, max: &Deg<V>) -> Deg<V> {
 
         debug_assert! (min < max, "Min cannot be greater than max.");
         if self < min {*min} else if self > max {*max} else {*self}

@@ -57,7 +57,7 @@ pub type Mat4u = Mat4<u32>;
 impl<T> From<T> for Mat4<T> where
     T: Copy + Num + NumCast {
 
-    fn from (value: T) -> Self {
+    fn from (value: T) -> Mat4<T> {
 
         Mat4::new (value, value, value, value,
                    value, value, value, value,
@@ -71,7 +71,7 @@ impl<T> From<T> for Mat4<T> where
 impl<'a, T> From<[&'a Vec4<T>; 4]> for Mat4<T> where
     T: Copy + Num + NumCast {
 
-    fn from (value: [&Vec4<T>; 4]) -> Self {
+    fn from (value: [&Vec4<T>; 4]) -> Mat4<T> {
 
         Mat4 {array: [*value[0],
                       *value[1],
@@ -92,7 +92,7 @@ impl<T> MatTrait for Mat4<T> where
     /// # use ion_math::matrix::{Mat4, MatTrait};
     /// let mat = Mat4::<f32>::identity ();
     /// ```
-    fn identity () -> Self {
+    fn identity () -> Mat4<T> {
 
         Mat4::new (T::one  (), T::zero (), T::zero (), T::zero (),
                    T::zero (), T::one  (), T::zero (), T::zero (),
@@ -108,9 +108,9 @@ impl<T> MatTrait for Mat4<T> where
 impl<T> Mul for Mat4<T> where
     T: AddAssign + Copy + Num + NumCast {
 
-    type Output = Self;
+    type Output = Mat4<T>;
 
-    fn mul (self, rhs: Self) -> Self::Output {
+    fn mul (self, rhs: Mat4<T>) -> Mat4<T> {
 
         let mut m = Mat4::zero ();
 
@@ -133,9 +133,9 @@ impl<T> Mul for Mat4<T> where
 impl<'a, T> Mul<&'a Mat4<T>> for Mat4<T> where
     T: AddAssign + Copy + Num + NumCast {
 
-    type Output = Self;
+    type Output = Mat4<T>;
 
-    fn mul (self, rhs: &Self) -> Self::Output {
+    fn mul (self, rhs: &Mat4<T>) -> Mat4<T> {
 
         let mut m = Mat4::zero ();
 
@@ -160,7 +160,7 @@ impl<'a, T> Mul<Mat4<T>> for &'a Mat4<T> where
 
     type Output = Mat4<T>;
 
-    fn mul (self, rhs: Mat4<T>) -> Self::Output {
+    fn mul (self, rhs: Mat4<T>) -> Mat4<T> {
 
         let mut m = Mat4::zero ();
 
@@ -185,7 +185,7 @@ impl<'a, T> Mul for &'a Mat4<T> where
 
     type Output = Mat4<T>;
 
-    fn mul (self, rhs: Self) -> Self::Output {
+    fn mul (self, rhs: &Mat4<T>) -> Mat4<T> {
 
         let mut m = Mat4::zero ();
 
@@ -210,7 +210,7 @@ impl<T> Index<u8> for Mat4<T> where
 
     type Output = Vec4<T>;
 
-    fn index (&self, index: u8) -> &Self::Output {
+    fn index (&self, index: u8) -> &Vec4<T> {
 
         match index {
 
@@ -259,7 +259,7 @@ impl<T> Mat4<T> where
     pub fn new<C> (m11: C, m12: C, m13: C, m14: C,
                    m21: C, m22: C, m23: C, m24: C,
                    m31: C, m32: C, m33: C, m34: C,
-                   m41: C, m42: C, m43: C, m44: C,) -> Self where
+                   m41: C, m42: C, m43: C, m44: C,) -> Mat4<T> where
         C: Num + NumCast {
 
         Mat4 {array: [Vec4::new (T::from (m11).unwrap (), T::from (m12).unwrap (), T::from (m13).unwrap (), T::from (m14).unwrap ()),
@@ -277,7 +277,7 @@ impl<T> Mat4<T> where
     /// # use ion_math::matrix::Mat4;
     /// let mat = Mat4::<f32>::zero ();
     /// ```
-    pub fn zero () -> Self {
+    pub fn zero () -> Mat4<T> {
         Mat4::from (T::zero ())
     }
 }
