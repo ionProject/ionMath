@@ -57,19 +57,17 @@ pub struct RGBA {
 
 impl Clamp for RGBA {
 
-    fn clamp (self, min: Self, max: Self) -> Self {
+    fn clamp (&self, min: &Self, max: &Self) -> Self {
 
         debug_assert! (min.r < max.r, "Min cannot be greater than max.");
         debug_assert! (min.g < max.g, "Min cannot be greater than max.");
         debug_assert! (min.b < max.b, "Min cannot be greater than max.");
         debug_assert! (min.a < max.a, "Min cannot be greater than max.");
 
-        let rval = if self.r < min.r {min.r} else if self.r > max.r {max.r} else {self.r};
-        let gval = if self.g < min.g {min.g} else if self.g > max.g {max.g} else {self.g};
-        let bval = if self.b < min.b {min.b} else if self.b > max.b {max.b} else {self.b};
-        let aval = if self.a < min.a {min.a} else if self.a > max.a {max.a} else {self.a};
-
-        RGBA::new (rval, gval, bval, aval)
+        RGBA::new (if self.r < min.r {min.r} else if self.r > max.r {max.r} else {self.r},
+                   if self.g < min.g {min.g} else if self.g > max.g {max.g} else {self.g},
+                   if self.b < min.b {min.b} else if self.b > max.b {max.b} else {self.b},
+                   if self.a < min.a {min.a} else if self.a > max.a {max.a} else {self.a})
     }
 }
 
@@ -143,7 +141,7 @@ impl<'a, T> From<&'a Vec4<T>> for RGBA where
 impl Lerp for RGBA {
 
     fn lerp<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
-        start + (end - start) * percentage.clamp (0.0, 1.0)
+        start + (end - start) * percentage.clamp (&0.0, &1.0)
     }
 
 /*-----------------------------------------------------------------------------------------------*/

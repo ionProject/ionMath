@@ -66,15 +66,13 @@ pub type Vec2u = Vec2<u32>;
 impl<V> Clamp for Vec2<V> where
     V: Copy + Num + NumCast + PartialOrd {
 
-    fn clamp (self, min: Self, max: Self) -> Self {
+    fn clamp (&self, min: &Self, max: &Self) -> Self {
 
         debug_assert! (min.x < max.x, "Min cannot be greater than max.");
         debug_assert! (min.y < max.y, "Min cannot be greater than max.");
 
-        let xval = if self.x < min.x {min.x} else if self.x > max.x {max.x} else {self.x};
-        let yval = if self.y < min.y {min.y} else if self.y > max.y {max.y} else {self.y};
-
-        Vec2::new (xval, yval)
+        Vec2::new (if self.x < min.x {min.x} else if self.x > max.x {max.x} else {self.x},
+                   if self.y < min.y {min.y} else if self.y > max.y {max.y} else {self.y})
     }
 }
 
@@ -136,7 +134,7 @@ impl<V> Lerp for Vec2<V> where
     V: Copy + Num + NumCast {
 
     fn lerp<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
-        (&(Vec2f::from (&(start + (end - start))) * percentage.clamp (0.0, 1.0))).into ()
+        (&(Vec2f::from (&(start + (end - start))) * percentage.clamp (&0.0, &1.0))).into ()
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -151,18 +149,18 @@ impl<V> Lerp for Vec2<V> where
 impl<V> MinMax for Vec2<V> where
     V: Copy + Num + NumCast + PartialOrd {
 
-    fn max (lhs: Self, rhs: Self) -> Self {
+    fn max (lhs: &Self, rhs: &Self) -> Self {
 
-        Vec2::new (V::max (lhs.x, rhs.x),
-                   V::max (lhs.y, rhs.y))
+        Vec2::new (if lhs.x > rhs.x {lhs.x} else {rhs.x},
+                   if lhs.y > rhs.y {lhs.y} else {rhs.y})
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn min (lhs: Self, rhs: Self) -> Self {
+    fn min (lhs: &Self, rhs: &Self) -> Self {
 
-        Vec2::new (V::min (lhs.x, rhs.x),
-                   V::min (lhs.y, rhs.y))
+        Vec2::new (if lhs.x < rhs.x {lhs.x} else {rhs.x},
+                   if lhs.y < rhs.y {lhs.y} else {rhs.y})
     }
 }
 

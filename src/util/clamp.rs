@@ -28,7 +28,7 @@ use self::num_traits::Num;
 pub trait Clamp {
 
     /// Clamps a value between two numbers.
-    fn clamp (self, min: Self, max: Self) -> Self;
+    fn clamp (&self, min: &Self, max: &Self) -> Self;
 }
 
 /*===============================================================================================*/
@@ -36,11 +36,11 @@ pub trait Clamp {
 /*===============================================================================================*/
 
 impl<T> Clamp for T where
-    T: Num + PartialOrd {
+    T: Copy + Num + PartialOrd {
 
-    fn clamp (self, min: Self, max: Self) -> Self {
+    fn clamp (&self, min: &Self, max: &Self) -> Self {
 
         debug_assert! (min < max, "Min cannot be greater than max.");
-        if self < min {min} else if self > max {max} else {self}
+        if self < min {*min} else if self > max {*max} else {*self}
     }
 }

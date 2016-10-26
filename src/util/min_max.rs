@@ -32,18 +32,18 @@ pub trait MinMax {
     /// # Examples
     /// ```
     /// # use ion_math::util::MinMax;
-    /// let num = i32::max (43, 7);
+    /// let num = i32::max (&43, &7);
     /// ```
-    fn max (lhs: Self, rhs: Self) -> Self;
+    fn max (lhs: &Self, rhs: &Self) -> Self;
 
     /// Returns the smallest of two numbers.
     ///
     /// # Examples
     /// ```
     /// # use ion_math::util::MinMax;
-    /// let num = i32::min (43, 7);
+    /// let num = i32::min (&43, &7);
     /// ```
-    fn min (lhs: Self, rhs: Self) -> Self;
+    fn min (lhs: &Self, rhs: &Self) -> Self;
 }
 
 /*===============================================================================================*/
@@ -51,15 +51,15 @@ pub trait MinMax {
 /*===============================================================================================*/
 
 impl<T> MinMax for T where
-    T: Num + PartialOrd {
+    T: Copy + Num + PartialOrd {
 
-    fn max (lhs: Self, rhs: Self) -> Self {
-        if lhs > rhs {lhs} else {rhs}
+    fn max (lhs: &Self, rhs: &Self) -> Self {
+        if lhs > rhs {*lhs} else {*rhs}
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn min (lhs: Self, rhs: Self) -> Self {
-        if lhs < rhs {lhs} else {rhs}
+    fn min (lhs: &Self, rhs: &Self) -> Self {
+        if lhs < rhs {*lhs} else {*rhs}
     }
 }

@@ -66,19 +66,17 @@ pub type Vec4u = Vec4<u32>;
 impl<V> Clamp for Vec4<V> where
     V: Copy + Num + NumCast + PartialOrd {
 
-    fn clamp (self, min: Self, max: Self) -> Self {
+    fn clamp (&self, min: &Self, max: &Self) -> Self {
 
         debug_assert! (min.x < max.x, "Min cannot be greater than max.");
         debug_assert! (min.y < max.y, "Min cannot be greater than max.");
         debug_assert! (min.z < max.z, "Min cannot be greater than max.");
         debug_assert! (min.w < max.w, "Min cannot be greater than max.");
 
-        let xval = if self.x < min.x {min.x} else if self.x > max.x {max.x} else {self.x};
-        let yval = if self.y < min.y {min.y} else if self.y > max.y {max.y} else {self.y};
-        let zval = if self.z < min.z {min.z} else if self.z > max.z {max.z} else {self.z};
-        let wval = if self.w < min.w {min.w} else if self.w > max.w {max.w} else {self.w};
-
-        Vec4::new (xval, yval, zval, wval)
+        Vec4::new (if self.x < min.x {min.x} else if self.x > max.x {max.x} else {self.x},
+                   if self.y < min.y {min.y} else if self.y > max.y {max.y} else {self.y},
+                   if self.z < min.z {min.z} else if self.z > max.z {max.z} else {self.z},
+                   if self.w < min.w {min.w} else if self.w > max.w {max.w} else {self.w})
     }
 }
 
@@ -148,13 +146,13 @@ impl<V> Lerp for Vec4<V> where
     V: Copy + Num + NumCast {
 
     fn lerp<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
-        (&(Vec4f::from (&(start + (end - start))) * percentage.clamp (0.0, 1.0))).into ()
+        (&(Vec4f::from (&(start + (end - start))) * percentage.clamp (&0.0, &1.0))).into ()
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
     fn lerp_unclamped<'a> (start: &'a Self, end: &'a Self, percentage: f32) -> Self {
-        (&(Vec4f::from (&(start + (end - start))) * percentage.clamp (0.0, 1.0))).into ()
+        (&(Vec4f::from (&(start + (end - start))) * percentage)).into ()
     }
 }
 
@@ -163,22 +161,22 @@ impl<V> Lerp for Vec4<V> where
 impl<V> MinMax for Vec4<V> where
     V: Copy + Num + NumCast + PartialOrd {
 
-    fn max (lhs: Self, rhs: Self) -> Self {
+    fn max (lhs: &Self, rhs: &Self) -> Self {
 
-        Vec4::new (V::max (lhs.x, rhs.x),
-                   V::max (lhs.y, rhs.y),
-                   V::max (lhs.z, rhs.z),
-                   V::max (lhs.w, rhs.w))
+        Vec4::new (if lhs.x > rhs.x {lhs.x} else {rhs.x},
+                   if lhs.y > rhs.y {lhs.y} else {rhs.y},
+                   if lhs.z > rhs.z {lhs.z} else {rhs.z},
+                   if lhs.w > rhs.w {lhs.w} else {rhs.w})
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn min (lhs: Self, rhs: Self) -> Self {
+    fn min (lhs: &Self, rhs: &Self) -> Self {
 
-        Vec4::new (V::min (lhs.x, rhs.x),
-                   V::min (lhs.y, rhs.y),
-                   V::min (lhs.z, rhs.z),
-                   V::min (lhs.w, rhs.w))
+        Vec4::new (if lhs.x < rhs.x {lhs.x} else {rhs.x},
+                   if lhs.y < rhs.y {lhs.y} else {rhs.y},
+                   if lhs.z < rhs.z {lhs.z} else {rhs.z},
+                   if lhs.w < rhs.w {lhs.w} else {rhs.w})
     }
 }
 
