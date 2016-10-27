@@ -134,13 +134,17 @@ impl<V> Lerp for Vec2<V> where
     V: Copy + Num + NumCast {
 
     fn lerp<'a> (start: &'a Vec2<V>, end: &'a Vec2<V>, percentage: f32) -> Vec2<V> {
-        (&(Vec2f::from (&(start + (end - start))) * percentage.clamp (&0.0, &1.0))).into ()
+
+        Vec2::<V>::new (V::lerp (&start.x, &end.x, percentage),
+                        V::lerp (&start.y, &end.y, percentage))
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
     fn lerp_unclamped<'a> (start: &'a Vec2<V>, end: &'a Vec2<V>, percentage: f32) -> Vec2<V> {
-        (&(Vec2f::from (&(start + (end - start))) * percentage)).into ()
+
+        Vec2::<V>::new (V::lerp_unclamped (&start.x, &end.x, percentage),
+                        V::lerp_unclamped (&start.y, &end.y, percentage))
     }
 }
 

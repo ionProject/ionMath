@@ -141,13 +141,21 @@ impl<'a, T> From<&'a Vec4<T>> for RGBA where
 impl Lerp for RGBA {
 
     fn lerp<'a> (start: &'a RGBA, end: &'a RGBA, percentage: f32) -> RGBA {
-        start + (end - start) * percentage.clamp (&0.0, &1.0)
+
+        RGBA::new (f32::lerp (&start.r, &end.r, percentage),
+                   f32::lerp (&start.g, &end.g, percentage),
+                   f32::lerp (&start.b, &end.b, percentage),
+                   f32::lerp (&start.a, &end.a, percentage))
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
     fn lerp_unclamped<'a> (start: &'a RGBA, end: &'a RGBA, percentage: f32) -> RGBA {
-        start + (end - start) * percentage
+
+        RGBA::new (f32::lerp_unclamped (&start.r, &end.r, percentage),
+                   f32::lerp_unclamped (&start.g, &end.g, percentage),
+                   f32::lerp_unclamped (&start.b, &end.b, percentage),
+                   f32::lerp_unclamped (&start.a, &end.a, percentage))
     }
 }
 

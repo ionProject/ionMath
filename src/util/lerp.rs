@@ -14,6 +14,14 @@
 // limitations under the License.
 /*===============================================================================================*/
 
+// Crate imports
+extern crate num_traits;
+
+// Module imports
+use self::num_traits::{Num, NumCast};
+
+use ::util::Clamp;
+
 /*===============================================================================================*/
 /*------LERP TRAIT-------------------------------------------------------------------------------*/
 /*===============================================================================================*/
@@ -22,7 +30,38 @@
 pub trait Lerp {
 
     /// Linearly interpolates between two values.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::util::Lerp;
+    /// let v = i32::lerp (&1, &256, 0.5);
+    /// ```
     fn lerp (start: &Self, end: &Self, percentage: f32) -> Self;
+
     /// Linearly interpolates between two values without clamping.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::util::Lerp;
+    /// let v = i32::lerp_unclamped (&1, &256, 0.5);
+    /// ```
     fn lerp_unclamped (start: &Self, end: &Self, percentage: f32) -> Self;
+}
+
+/*===============================================================================================*/
+/*------LERP TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
+/*===============================================================================================*/
+
+impl<T> Lerp for T where
+    T: Copy + Num + NumCast {
+
+    fn lerp (start: &T, end: &T, percentage: f32) -> T {
+        T::from ((*start + (*end - *start)).to_f32 ().unwrap () * percentage.clamp (&0.0, &1.0)).unwrap ()
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn lerp_unclamped (start: &T, end: &T, percentage: f32) -> T {
+        T::from ((*start + (*end - *start)).to_f32 ().unwrap () * percentage).unwrap ()
+    }
 }
