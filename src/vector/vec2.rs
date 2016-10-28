@@ -224,8 +224,8 @@ impl<V> VecTraitF for Vec2<V> where
     ///
     /// let distance = vec01.distance (&vec02);
     /// ```
-    fn distance (&self, rhs: &Vec2<V>) -> V {
-        (*self - *rhs).length ()
+    fn distance<'a> (&'a self, rhs: &'a Vec2<V>) -> V {
+        (self - rhs).length ()
     }
 
 /*-----------------------------------------------------------------------------------------------*/

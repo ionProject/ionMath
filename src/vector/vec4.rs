@@ -248,8 +248,8 @@ impl<V> VecTraitF for Vec4<V> where
     ///
     /// let distance = vec01.distance (&vec02);
     /// ```
-    fn distance (&self, rhs: &Vec4<V>) -> V {
-        (*self - *rhs).length ()
+    fn distance<'a> (&'a self, rhs: &'a Vec4<V>) -> V {
+        (self - rhs).length ()
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -265,9 +265,9 @@ impl<V> VecTraitF for Vec4<V> where
     fn length (&self) -> V {
 
         (self.x * self.x +
-            self.y * self.y +
-            self.z * self.z +
-            self.w * self.w).sqrt ()
+         self.y * self.y +
+         self.z * self.z +
+         self.w * self.w).sqrt ()
     }
 
 /*-----------------------------------------------------------------------------------------------*/
