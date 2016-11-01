@@ -33,10 +33,10 @@ pub trait VecTrait:
 
     /// Lerps between two vectors.
     fn lerp (start: &Self, end: &Self, percentage: f32) -> Self;
-    /// Returns the smallest components of two vectors.
-    fn min  (lhs: &Self, rhs: &Self) -> Self;
     /// Returns the largest components of two vectors.
     fn max  (lhs: &Self, rhs: &Self) -> Self;
+    /// Returns the smallest components of two vectors.
+    fn min  (lhs: &Self, rhs: &Self) -> Self;
 
     /// Clamps a vector between two values.
     fn clamp (&self, min: &Self, max: &Self) -> Self;

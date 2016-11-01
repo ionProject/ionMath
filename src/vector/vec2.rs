@@ -20,15 +20,15 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Float, Num, NumCast};
 
-use ::vector::{Vec3, Vec4, VecTrait, VecTraitF};
 use ::util;
+use ::vector::{Vec3, Vec4, VecTrait, VecTraitF};
 
+use std::convert::From;
 use std::ops::{Add,   AddAssign,
                Sub,   SubAssign,
                Mul,   MulAssign,
                Div,   DivAssign,
                Index, IndexMut};
-use std::convert::From;
 
 /*===============================================================================================*/
 /*------VEC2 STRUCT------------------------------------------------------------------------------*/
@@ -41,14 +41,14 @@ use std::convert::From;
 /// It can accept any number as a value.
 #[cfg_attr (feature = "serde_serialize", derive (Deserialize, Serialize))]
 #[derive (Copy, Clone, Debug, Default, PartialEq)]
-pub struct Vec2<V> where
-    V: Copy + Num + NumCast {
+pub struct Vec2<T> where
+    T: Copy + Num + NumCast {
 
     // Public
     /// The vector x-coordinate.
-    pub x: V,
+    pub x: T,
     /// The vector y-coordinate.
-    pub y: V,
+    pub y: T,
 }
 
 // Predefined Vec2 types
@@ -60,93 +60,557 @@ pub type Vec2i = Vec2<i32>;
 pub type Vec2u = Vec2<u32>;
 
 /*===============================================================================================*/
-/*------VEC2 TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
+/*------CONSTRUCTORS-----------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V, U> From<U> for Vec2<V> where
-    V: Copy + Num + NumCast,
-    U: Copy + Num + NumCast {
+impl<T> Vec2<T> where
+    T: Copy + Num + NumCast {
 
-    fn from (value: U) -> Vec2<V> {
-
-        Vec2::new (V::from (value).unwrap (),
-                   V::from (value).unwrap ())
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V, U> From<&'a Vec2<U>> for Vec2<V> where
-    V: Copy + Num + NumCast,
-    U: Copy + Num + NumCast {
-
-    fn from (value: &Vec2<U>) -> Vec2<V> {
-
-        Vec2::new (V::from (value.x).unwrap (),
-                   V::from (value.y).unwrap ())
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V, U> From<&'a Vec3<U>> for Vec2<V> where
-    V: Copy + Num + NumCast,
-    U: Copy + Num + NumCast {
-
-    fn from (value: &Vec3<U>) -> Vec2<V> {
-
-        Vec2::new (V::from (value.x).unwrap (),
-                   V::from (value.y).unwrap ())
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V, U> From<&'a Vec4<U>> for Vec2<V> where
-    V: Copy + Num + NumCast,
-    U: Copy + Num + NumCast {
-
-    fn from (value: &Vec4<U>) -> Vec2<V> {
-
-        Vec2::new (V::from (value.x).unwrap (),
-                   V::from (value.y).unwrap ())
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> VecTrait for Vec2<V> where
-    V: Copy + Default + Num + NumCast + PartialOrd {
-
-    type ValType = V;
-
-    fn clamp (&self, min: &Self, max: &Self) -> Self {
-
-        Vec2::new (util::clamp (self.x, min.x, max.x),
-                   util::clamp (self.y, min.y, max.y))
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns the dot product of two vectors.
+    /// Returns a new `Vec2<T>` instance.
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::vector::{Vec2, VecTrait};
-    /// let vec01 = Vec2::<f32>::new (1.0, 3.0);
-    /// let vec02 = Vec2::<f32>::new (4.0, 9.0);
-    ///
-    /// let dot_product = vec01.dot (&vec02);
+    /// # use ion_math::vector::Vec2;
+    /// let vec = Vec2::<f32>::new (3, 7);
     /// ```
-    fn dot (&self, rhs: &Vec2<V>) -> V {
+    pub fn new<C> (x: C, y: C) -> Vec2<T> where
+        C: Copy + Num + NumCast {
 
-        (self.x * rhs.x) +
-        (self.y * rhs.y)
+        Vec2 {x: T::from (x).unwrap (),
+              y: T::from (y).unwrap ()}
     }
+}
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn lerp (start: &Self, end: &Self, percentage: f32) -> Self {
+impl<T, U> From<U> for Vec2<T> where
+    T: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: U) -> Vec2<T> {
+
+        Vec2::new (T::from (value).unwrap (),
+                   T::from (value).unwrap ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T, U> From<&'a Vec2<U>> for Vec2<T> where
+    T: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: &Vec2<U>) -> Vec2<T> {
+
+        Vec2::new (T::from (value.x).unwrap (),
+                   T::from (value.y).unwrap ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T, U> From<&'a Vec3<U>> for Vec2<T> where
+    T: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: &Vec3<U>) -> Vec2<T> {
+
+        Vec2::new (T::from (value.x).unwrap (),
+                   T::from (value.y).unwrap ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T, U> From<&'a Vec4<U>> for Vec2<T> where
+    T: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: &Vec4<U>) -> Vec2<T> {
+
+        Vec2::new (T::from (value.x).unwrap (),
+                   T::from (value.y).unwrap ())
+    }
+}
+
+/*===============================================================================================*/
+/*------OPERATORS--------------------------------------------------------------------------------*/
+/*===============================================================================================*/
+
+impl<T> Add for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn add (self, rhs: Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x + rhs.x,
+                   self.y + rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Add<&'a Vec2<T>> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn add (self, rhs: &Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x + rhs.x,
+                   self.y + rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Add<Vec2<T>> for &'a Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn add (self, rhs: Vec2<T>) -> Vec2<T> {
+
+       Vec2::new (self.x + rhs.x,
+                  self.y + rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, 'b, T> Add<&'a Vec2<T>> for &'b Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn add (self, rhs: &Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x + rhs.x,
+                   self.y + rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Add<T> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn add (self, rhs: T) -> Vec2<T> {
+
+        Vec2::new (self.x + rhs,
+                   self.y + rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Add<T> for &'a Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn add (self, rhs: T) -> Vec2<T> {
+
+        Vec2::new (self.x + rhs,
+                   self.y + rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> AddAssign for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    fn add_assign (&mut self, rhs: Vec2<T>) {
+
+        self.x = self.x + rhs.x;
+        self.y = self.y + rhs.y;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> AddAssign<T> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    fn add_assign (&mut self, rhs: T) {
+
+        self.x = self.x + rhs;
+        self.y = self.y + rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Sub for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn sub (self, rhs: Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x - rhs.x,
+                   self.y - rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Sub<&'a Vec2<T>> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn sub (self, rhs: &Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x - rhs.x,
+                   self.y - rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Sub<Vec2<T>> for &'a Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn sub (self, rhs: Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x - rhs.x,
+                   self.y - rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, 'b, T> Sub<&'a Vec2<T>> for &'b Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn sub (self, rhs: &Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x - rhs.x,
+                   self.y - rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Sub<T> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn sub (self, rhs: T) -> Vec2<T> {
+
+        Vec2::new (self.x - rhs,
+                   self.y - rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Sub<T> for &'a Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn sub (self, rhs: T) -> Vec2<T> {
+
+        Vec2::new (self.x - rhs,
+                   self.y - rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> SubAssign for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    fn sub_assign (&mut self, rhs: Vec2<T>) {
+
+        self.x = self.x - rhs.x;
+        self.y = self.y - rhs.y;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> SubAssign<T> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    fn sub_assign (&mut self, rhs: T) {
+
+        self.x = self.x - rhs;
+        self.y = self.y - rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Mul for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn mul (self, rhs: Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x * rhs.x,
+                   self.y * rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Mul<&'a Vec2<T>> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn mul (self, rhs: &Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x * rhs.x,
+                   self.y * rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Mul<Vec2<T>> for &'a Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn mul (self, rhs: Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x * rhs.x,
+                   self.y * rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, 'b, T> Mul<&'a Vec2<T>> for &'b Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn mul (self, rhs: &Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x * rhs.x,
+                   self.y * rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Mul<T> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn mul (self, rhs: T) -> Vec2<T> {
+
+        Vec2::new (self.x * rhs,
+                   self.y * rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Mul<T> for &'a Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn mul (self, rhs: T) -> Vec2<T> {
+
+        Vec2::new (self.x * rhs,
+                   self.y * rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> MulAssign for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    fn mul_assign (&mut self, rhs: Vec2<T>) {
+
+        self.x = self.x * rhs.x;
+        self.y = self.y * rhs.y;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> MulAssign<T> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    fn mul_assign (&mut self, rhs: T) {
+
+        self.x = self.x * rhs;
+        self.y = self.y * rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Div for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn div (self, rhs: Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x / rhs.x,
+                   self.y / rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Div<&'a Vec2<T>> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn div (self, rhs: &Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x / rhs.x,
+                   self.y / rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Div<Vec2<T>> for &'a Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn div (self, rhs: Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x / rhs.x,
+                   self.y / rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, 'b, T> Div<&'a Vec2<T>> for &'b Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn div (self, rhs: &Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (self.x / rhs.x,
+                   self.y / rhs.y)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Div<T> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn div (self, rhs: T) -> Vec2<T> {
+
+        Vec2::new (self.x / rhs,
+                   self.y / rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Div<T> for &'a Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec2<T>;
+
+    fn div (self, rhs: T) -> Vec2<T> {
+
+        Vec2::new (self.x / rhs,
+                   self.y / rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> DivAssign for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    fn div_assign (&mut self, rhs: Vec2<T>) {
+
+        self.x = self.x / rhs.x;
+        self.y = self.y / rhs.y;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> DivAssign<T> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    fn div_assign (&mut self, rhs: T) {
+
+        self.x = self.x / rhs;
+        self.y = self.y / rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Index<u8> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = T;
+
+    fn index (&self, index: u8) -> &T {
+
+        match index {
+
+            0 => &self.x,
+            1 => &self.y,
+            _ => unreachable! ("Index out of range for Vec2")
+        }
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> IndexMut<u8> for Vec2<T> where
+    T: Copy + Num + NumCast {
+
+    fn index_mut (&mut self, index: u8) -> &mut T {
+
+        match index {
+
+            0 => &mut self.x,
+            1 => &mut self.y,
+            _ => unreachable! ("Index out of range for Vec2")
+        }
+    }
+}
+
+/*===============================================================================================*/
+/*------TRAIT IMPLEMENTATIONS--------------------------------------------------------------------*/
+/*===============================================================================================*/
+
+impl<T> VecTrait for Vec2<T> where
+    T: Copy + Default + Num + NumCast + PartialOrd {
+
+    type ValType = T;
+
+    fn lerp (start: &Vec2<T>, end: &Vec2<T>, percentage: f32) -> Vec2<T> {
 
         Vec2::new (util::lerp (start.x, end.x, percentage),
                    util::lerp (start.y, end.y, percentage))
@@ -154,7 +618,15 @@ impl<V> VecTrait for Vec2<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn min (lhs: &Self, rhs: &Self) -> Self {
+    fn max (lhs: &Vec2<T>, rhs: &Vec2<T>) -> Vec2<T> {
+
+        Vec2::new (util::max (lhs.x, rhs.x),
+                   util::max (lhs.y, rhs.y))
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn min (lhs: &Vec2<T>, rhs: &Vec2<T>) -> Vec2<T> {
 
         Vec2::new (util::min (lhs.x, rhs.x),
                    util::min (lhs.y, rhs.y))
@@ -162,19 +634,27 @@ impl<V> VecTrait for Vec2<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn max (lhs: &Self, rhs: &Self) -> Self {
+    fn clamp (&self, min: &Vec2<T>, max: &Vec2<T>) -> Vec2<T> {
 
-        Vec2::new (util::max (lhs.x, rhs.x),
-                   util::max (lhs.y, rhs.y))
+        Vec2::new (util::clamp (self.x, min.x, max.x),
+                   util::clamp (self.y, min.y, max.y))
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn dot (&self, rhs: &Vec2<T>) -> T {
+
+        (self.x * rhs.x) +
+        (self.y * rhs.y)
     }
 }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> VecTraitF for Vec2<V> where
-    V: Default + Float {
+impl<T> VecTraitF for Vec2<T> where
+    T: Default + Float {
 
-    type ValTypeF = V;
+    type ValTypeF = T;
 
     /// Returns the distance between two vectors.
     ///
@@ -186,7 +666,7 @@ impl<V> VecTraitF for Vec2<V> where
     ///
     /// let distance = vec01.distance (&vec02);
     /// ```
-    fn distance<'a> (&'a self, rhs: &'a Vec2<V>) -> V {
+    fn distance (&self, rhs: &Vec2<T>) -> T {
         (self - rhs).length ()
     }
 
@@ -200,7 +680,7 @@ impl<V> VecTraitF for Vec2<V> where
     /// let vec = Vec2::<f32>::new (1.0, 3.0);
     /// let vec_length = vec.length ();
     /// ```
-    fn length (&self) -> V {
+    fn length (&self) -> T {
 
         (self.x * self.x +
          self.y * self.y).sqrt ()
@@ -216,566 +696,97 @@ impl<V> VecTraitF for Vec2<V> where
     /// let vec = Vec2::<f32>::new (3.0, 9.0);
     /// let vec_normalized = vec.normalize ();
     /// ```
-    fn normalize (&self) -> Vec2<V> {
+    fn normalize (&self) -> Vec2<T> {
 
         let length = self.length ();
 
-        if length != V::zero () {
+        if length != T::zero () {
 
             return Vec2::new (self.x / length,
                               self.y / length);
         }
 
-        Vec2::default ()
+        Vec2::zero ()
     }
 }
 
 /*===============================================================================================*/
-/*------VEC2 OPERATORS---------------------------------------------------------------------------*/
+/*------PUBLIC METHODS---------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V> Add for Vec2<V> where
-    V: Copy + Num + NumCast {
+impl<T> Vec2<T> where
+    T: Copy + Num + NumCast {
 
-    type Output = Vec2<V>;
-
-    fn add (self, rhs: Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x + rhs.x,
-                   self.y + rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Add<&'a Vec2<V>> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn add (self, rhs: &Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x + rhs.x,
-                   self.y + rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Add<Vec2<V>> for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn add (self, rhs: Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x + rhs.x,
-                   self.y + rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Add for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn add (self, rhs: &Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x + rhs.x,
-                   self.y + rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Add<V> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn add (self, rhs: V) -> Vec2<V> {
-
-        Vec2::new (self.x + rhs,
-                   self.y + rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Add<V> for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn add (self, rhs: V) -> Vec2<V> {
-
-        Vec2::new (self.x + rhs,
-                   self.y + rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> AddAssign for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    fn add_assign (&mut self, rhs: Vec2<V>) {
-
-        self.x = self.x + rhs.x;
-        self.y = self.y + rhs.y;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> AddAssign<V> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    fn add_assign (&mut self, rhs: V) {
-
-        self.x = self.x + rhs;
-        self.y = self.y + rhs;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Sub for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn sub (self, rhs: Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x - rhs.x,
-                   self.y - rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Sub<&'a Vec2<V>> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn sub (self, rhs: &Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x - rhs.x,
-                   self.y - rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Sub<Vec2<V>> for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn sub (self, rhs: Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x - rhs.x,
-                   self.y - rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Sub for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn sub (self, rhs: &Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x - rhs.x,
-                   self.y - rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Sub<V> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn sub (self, rhs: V) -> Vec2<V> {
-
-        Vec2::new (self.x - rhs,
-                   self.y - rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Sub<V> for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn sub (self, rhs: V) -> Vec2<V> {
-
-        Vec2::new (self.x - rhs,
-                   self.y - rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> SubAssign for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    fn sub_assign (&mut self, rhs: Vec2<V>) {
-
-        self.x = self.x - rhs.x;
-        self.y = self.y - rhs.y;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> SubAssign<V> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    fn sub_assign (&mut self, rhs: V) {
-
-        self.x = self.x - rhs;
-        self.y = self.y - rhs;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Mul for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn mul (self, rhs: Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x * rhs.x,
-                   self.y * rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Mul<&'a Vec2<V>> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn mul (self, rhs: &Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x * rhs.x,
-                   self.y * rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Mul<Vec2<V>> for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn mul (self, rhs: Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x * rhs.x,
-                   self.y * rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Mul for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn mul (self, rhs: &Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x * rhs.x,
-                   self.y * rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Mul<V> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn mul (self, rhs: V) -> Vec2<V> {
-
-        Vec2::new (self.x * rhs,
-                   self.y * rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Mul<V> for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn mul (self, rhs: V) -> Vec2<V> {
-
-        Vec2::new (self.x * rhs,
-                   self.y * rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> MulAssign for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    fn mul_assign (&mut self, rhs: Vec2<V>) {
-
-        self.x = self.x * rhs.x;
-        self.y = self.y * rhs.y;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> MulAssign<V> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    fn mul_assign (&mut self, rhs: V) {
-
-        self.x = self.x * rhs;
-        self.y = self.y * rhs;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Div for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn div (self, rhs: Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x / rhs.x,
-                   self.y / rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Div<&'a Vec2<V>> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn div (self, rhs: &Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x / rhs.x,
-                   self.y / rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Div<Vec2<V>> for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn div (self, rhs: Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x / rhs.x,
-                   self.y / rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Div for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn div (self, rhs: &Vec2<V>) -> Vec2<V> {
-
-        Vec2::new (self.x / rhs.x,
-                   self.y / rhs.y)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Div<V> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn div (self, rhs: V) -> Vec2<V> {
-
-        Vec2::new (self.x / rhs,
-                   self.y / rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Div<V> for &'a Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec2<V>;
-
-    fn div (self, rhs: V) -> Vec2<V> {
-
-        Vec2::new (self.x / rhs,
-                   self.y / rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> DivAssign for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    fn div_assign (&mut self, rhs: Vec2<V>) {
-
-        self.x = self.x / rhs.x;
-        self.y = self.y / rhs.y;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> DivAssign<V> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    fn div_assign (&mut self, rhs: V) {
-
-        self.x = self.x / rhs;
-        self.y = self.y / rhs;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Index<u8> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = V;
-
-    fn index (&self, index: u8) -> &V {
-
-        match index {
-
-            0 => &self.x,
-            1 => &self.y,
-            _ => unreachable! ("Index out of range for Vec2")
-        }
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> IndexMut<u8> for Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    fn index_mut (&mut self, index: u8) -> &mut V {
-
-        match index {
-
-            0 => &mut self.x,
-            1 => &mut self.y,
-            _ => unreachable! ("Index out of range for Vec2")
-        }
-    }
-}
-
-/*===============================================================================================*/
-/*------VEC2 PUBLIC METHODS----------------------------------------------------------------------*/
-/*===============================================================================================*/
-
-impl<V> Vec2<V> where
-    V: Copy + Num + NumCast {
-
-    /// Returns a new `Vec2<V>` instance.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec2;
-    /// let vec = Vec2::<f32>::new (3, 7);
-    /// ```
-    pub fn new<C> (x: C, y: C) -> Vec2<V> where
-        C: Num + NumCast {
-
-        Vec2 {x: V::from (x).unwrap (),
-              y: V::from (y).unwrap ()}
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns a `Vec2<V>` with a value of (0, 1).
+    /// Returns a `Vec2<T>` with a value of (0, 1).
     ///
     /// # Examples
     /// ```
     /// # use ion_math::vector::Vec2;
     /// let vec = Vec2::<f32>::up ();
     /// ```
-    pub fn up () -> Vec2<V> {
+    pub fn up () -> Vec2<T> {
 
-        Vec2::new (V::zero (),
-                   V::one  ())
+        Vec2::new (T::zero (),
+                   T::one  ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    /// Returns a `Vec2<V>` with a value of (0, -1).
+    /// Returns a `Vec2<T>` with a value of (0, -1).
     ///
     /// # Examples
     /// ```
     /// # use ion_math::vector::Vec2;
     /// let vec = Vec2::<f32>::down ();
     /// ```
-    pub fn down () -> Vec2<V> {
+    pub fn down () -> Vec2<T> {
 
-        Vec2::new (V::zero (),
-                   V::from (-1).unwrap ())
+        Vec2::new (T::zero (),
+                   T::from (-1).unwrap ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    /// Returns a `Vec2<V>` with a value of (0, 1).
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec2;
-    /// let vec = Vec2::<f32>::right ();
-    /// ```
-    pub fn right () -> Vec2<V> {
-
-        Vec2::new (V::one  (),
-                   V::zero ())
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns a `Vec2<V>` with a value of (0, -1).
+    /// Returns a `Vec2<T>` with a value of (0, -1).
     ///
     /// # Examples
     /// ```
     /// # use ion_math::vector::Vec2;
     /// let vec = Vec2::<f32>::left ();
     /// ```
-    pub fn left () -> Vec2<V> {
+    pub fn left () -> Vec2<T> {
 
-        Vec2::new (V::from (-1).unwrap (),
-                   V::zero ())
+        Vec2::new (T::from (-1).unwrap (),
+                   T::zero ())
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns a `Vec2<T>` with a value of (0, 1).
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::vector::Vec2;
+    /// let vec = Vec2::<f32>::right ();
+    /// ```
+    pub fn right () -> Vec2<T> {
+
+        Vec2::new (T::one  (),
+                   T::zero ())
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns a `Vec2<T>` with a value of (0, 0).
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::vector::Vec2;
+    /// let vec = Vec2::<f32>::zero ();
+    /// ```
+    pub fn zero () -> Vec2<T> {
+
+        Vec2::new (T::zero (),
+                   T::zero ())
     }
 }
