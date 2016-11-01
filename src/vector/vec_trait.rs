@@ -20,22 +20,26 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Float, Num};
 
-// Module imports
-use ::util::{Clamp, Lerp, MinMax};
-
 /*===============================================================================================*/
 /*------VECTOR TRAIT-----------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
 /// Implemented by all vector types.
 pub trait VecTrait:
-    Clamp + Default + Lerp + MinMax {
+    Default {
 
     /// The vector component type.
     type ValType: Num;
 
-    /// Returns a vector with a value of zero.
-    fn zero () -> Self;
+    /// Lerps between two vectors.
+    fn lerp (start: &Self, end: &Self, percentage: f32) -> Self;
+    /// Returns the smallest components of two vectors.
+    fn min  (lhs: &Self, rhs: &Self) -> Self;
+    /// Returns the largest components of two vectors.
+    fn max  (lhs: &Self, rhs: &Self) -> Self;
+
+    /// Clamps a vector between two values.
+    fn clamp (&self, min: &Self, max: &Self) -> Self;
     /// Returns the dot product of two vectors.
     fn dot (&self, rhs: &Self) -> Self::ValType;
 }

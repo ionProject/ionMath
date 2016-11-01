@@ -21,7 +21,7 @@ extern crate num_traits;
 use self::num_traits::{Float, Num, NumCast};
 
 use ::vector::{Vec2, Vec3, VecTrait, VecTraitF};
-use ::util::{Clamp, Lerp, MinMax};
+use ::util;
 
 use std::ops::{Add,   AddAssign,
                Sub,   SubAssign,
@@ -62,25 +62,6 @@ pub type Vec4u = Vec4<u32>;
 /*===============================================================================================*/
 /*------Vec4 TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
 /*===============================================================================================*/
-
-impl<V> Clamp for Vec4<V> where
-    V: Copy + Num + NumCast + PartialOrd {
-
-    fn clamp (&self, min: &Vec4<V>, max: &Vec4<V>) -> Vec4<V> {
-
-        debug_assert! (min.x < max.x, "Min cannot be greater than max.");
-        debug_assert! (min.y < max.y, "Min cannot be greater than max.");
-        debug_assert! (min.z < max.z, "Min cannot be greater than max.");
-        debug_assert! (min.w < max.w, "Min cannot be greater than max.");
-
-        Vec4::new (if self.x < min.x {min.x} else if self.x > max.x {max.x} else {self.x},
-                   if self.y < min.y {min.y} else if self.y > max.y {max.y} else {self.y},
-                   if self.z < min.z {min.z} else if self.z > max.z {max.z} else {self.z},
-                   if self.w < min.w {min.w} else if self.w > max.w {max.w} else {self.w})
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
 
 impl<V, U> From<U> for Vec4<V> where
     V: Copy + Num + NumCast,
@@ -142,72 +123,17 @@ impl<'a, V, U> From<&'a Vec4<U>> for Vec4<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> Lerp for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    fn lerp<'a> (start: &'a Vec4<V>, end: &'a Vec4<V>, percentage: f32) -> Vec4<V> {
-
-        Vec4::<V>::new (V::lerp (&start.x, &end.x, percentage),
-                        V::lerp (&start.y, &end.y, percentage),
-                        V::lerp (&start.z, &end.z, percentage),
-                        V::lerp (&start.w, &end.w, percentage))
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    fn lerp_unclamped<'a> (start: &'a Vec4<V>, end: &'a Vec4<V>, percentage: f32) -> Vec4<V> {
-
-        Vec4::<V>::new (V::lerp_unclamped (&start.x, &end.x, percentage),
-                        V::lerp_unclamped (&start.y, &end.y, percentage),
-                        V::lerp_unclamped (&start.z, &end.z, percentage),
-                        V::lerp_unclamped (&start.w, &end.w, percentage))
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> MinMax for Vec4<V> where
-    V: Copy + Num + NumCast + PartialOrd {
-
-    fn max (lhs: &Vec4<V>, rhs: &Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (if lhs.x > rhs.x {lhs.x} else {rhs.x},
-                   if lhs.y > rhs.y {lhs.y} else {rhs.y},
-                   if lhs.z > rhs.z {lhs.z} else {rhs.z},
-                   if lhs.w > rhs.w {lhs.w} else {rhs.w})
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    fn min (lhs: &Vec4<V>, rhs: &Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (if lhs.x < rhs.x {lhs.x} else {rhs.x},
-                   if lhs.y < rhs.y {lhs.y} else {rhs.y},
-                   if lhs.z < rhs.z {lhs.z} else {rhs.z},
-                   if lhs.w < rhs.w {lhs.w} else {rhs.w})
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
 impl<V> VecTrait for Vec4<V> where
     V: Copy + Default + Num + NumCast + PartialOrd {
 
     type ValType = V;
 
-    /// Returns a `Vec4<V>` with a value of zero.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::{Vec4, VecTrait};
-    /// let vec = Vec4::<f32>::zero ();
-    /// ```
-    fn zero () -> Vec4<V> {
+    fn clamp (&self, min: &Self, max: &Self) -> Self {
 
-        Vec4::new (V::zero (),
-                   V::zero (),
-                   V::zero (),
-                   V::zero ())
+        Vec4::new (util::clamp (self.x, min.x, max.x),
+                   util::clamp (self.y, min.y, max.y),
+                   util::clamp (self.z, min.z, max.z),
+                   util::clamp (self.w, min.w, max.w))
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -228,6 +154,36 @@ impl<V> VecTrait for Vec4<V> where
         (self.y * rhs.y) +
         (self.z * rhs.z) +
         (self.w * rhs.w)
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn lerp (start: &Self, end: &Self, percentage: f32) -> Self {
+
+        Vec4::new (util::lerp (start.x, end.x, percentage),
+                   util::lerp (start.y, end.y, percentage),
+                   util::lerp (start.z, end.z, percentage),
+                   util::lerp (start.w, end.w, percentage))
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn min (lhs: &Self, rhs: &Self) -> Self {
+
+        Vec4::new (util::min (lhs.x, rhs.x),
+                   util::min (lhs.y, rhs.y),
+                   util::min (lhs.z, rhs.z),
+                   util::min (lhs.w, rhs.w))
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn max (lhs: &Self, rhs: &Self) -> Self {
+
+        Vec4::new (util::max (lhs.x, rhs.x),
+                   util::max (lhs.y, rhs.y),
+                   util::max (lhs.z, rhs.z),
+                   util::max (lhs.w, rhs.w))
     }
 }
 
@@ -292,7 +248,7 @@ impl<V> VecTraitF for Vec4<V> where
                               self.w / length);
         }
 
-        Vec4::zero ()
+        Vec4::default ()
     }
 }
 

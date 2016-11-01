@@ -14,16 +14,13 @@
 // limitations under the License.
 /*===============================================================================================*/
 
-// Module imports
-use ::util::{Clamp, Lerp};
-
 /*===============================================================================================*/
 /*------COLOUR TRAIT-----------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
 /// Implemented by all colour types.
 pub trait ColourTrait:
-    Clamp + Default + Lerp {
+    Default {
 
     /// Returns the colour black.
     fn black () -> Self;
@@ -49,4 +46,10 @@ pub trait ColourTrait:
     fn magenta () -> Self;
     /// Returns a fully transparent colour.
     fn transparent () -> Self;
+
+    /// Lerps between two colours.
+    fn lerp (start: &Self, end: &Self, percentage: f32) -> Self;
+
+    /// Clamps a colour between two values.
+    fn clamp (&self, min: &Self, max: &Self) -> Self;
 }

@@ -21,7 +21,6 @@ extern crate num_traits;
 use self::num_traits::{Float, Num, NumCast};
 
 use ::angle::Rad;
-use ::util::Clamp;
 
 use std::convert::From;
 
@@ -43,18 +42,6 @@ pub struct Deg<V> where
 /*===============================================================================================*/
 /*------DEG TRAIT IMPLEMENTATIONS----------------------------------------------------------------*/
 /*===============================================================================================*/
-
-impl<V> Clamp for Deg<V> where
-    V: Float {
-
-    fn clamp (&self, min: &Deg<V>, max: &Deg<V>) -> Deg<V> {
-
-        debug_assert! (min < max, "Min cannot be greater than max.");
-        if self < min {*min} else if self > max {*max} else {*self}
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
 
 impl<'a, V> From<&'a Rad<V>> for Deg<V> where
     V: Copy + Float + NumCast {
