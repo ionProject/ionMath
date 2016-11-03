@@ -89,8 +89,8 @@ impl<T, U> From<U> for Vec2<T> where
 
     fn from (value: U) -> Vec2<T> {
 
-        Vec2::new (T::from (value).unwrap (),
-                   T::from (value).unwrap ())
+        Vec2::new (value,
+                   value)
     }
 }
 
@@ -102,8 +102,8 @@ impl<'a, T, U> From<&'a Vec2<U>> for Vec2<T> where
 
     fn from (value: &Vec2<U>) -> Vec2<T> {
 
-        Vec2::new (T::from (value.x).unwrap (),
-                   T::from (value.y).unwrap ())
+        Vec2::new (value.x,
+                   value.y)
     }
 }
 
@@ -115,8 +115,8 @@ impl<'a, T, U> From<&'a Vec3<U>> for Vec2<T> where
 
     fn from (value: &Vec3<U>) -> Vec2<T> {
 
-        Vec2::new (T::from (value.x).unwrap (),
-                   T::from (value.y).unwrap ())
+        Vec2::new (value.x,
+                   value.y)
     }
 }
 
@@ -128,8 +128,8 @@ impl<'a, T, U> From<&'a Vec4<U>> for Vec2<T> where
 
     fn from (value: &Vec4<U>) -> Vec2<T> {
 
-        Vec2::new (T::from (value.x).unwrap (),
-                   T::from (value.y).unwrap ())
+        Vec2::new (value.x,
+                   value.y)
     }
 }
 
@@ -725,9 +725,7 @@ impl<T> Vec2<T> where
     /// let vec = Vec2::<f32>::up ();
     /// ```
     pub fn up () -> Vec2<T> {
-
-        Vec2::new (T::zero (),
-                   T::one  ())
+        Vec2::new (0, 1)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -740,9 +738,7 @@ impl<T> Vec2<T> where
     /// let vec = Vec2::<f32>::down ();
     /// ```
     pub fn down () -> Vec2<T> {
-
-        Vec2::new (T::zero (),
-                   T::from (-1).unwrap ())
+        Vec2::new (0, -1)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -755,9 +751,7 @@ impl<T> Vec2<T> where
     /// let vec = Vec2::<f32>::left ();
     /// ```
     pub fn left () -> Vec2<T> {
-
-        Vec2::new (T::from (-1).unwrap (),
-                   T::zero ())
+        Vec2::new (-1, 0)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -770,9 +764,7 @@ impl<T> Vec2<T> where
     /// let vec = Vec2::<f32>::right ();
     /// ```
     pub fn right () -> Vec2<T> {
-
-        Vec2::new (T::one  (),
-                   T::zero ())
+        Vec2::new (1, 0)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -785,6 +777,6 @@ impl<T> Vec2<T> where
     /// let vec = Vec2::<f32>::zero ();
     /// ```
     pub fn zero () -> Vec2<T> {
-        Vec2::from (T::zero ())
+        Vec2::from (0)
     }
 }
