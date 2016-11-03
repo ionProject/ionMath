@@ -20,35 +20,35 @@ extern crate num_traits;
 // Module imports
 use self::num_traits::{Float, Num, NumCast};
 
-use ::vector::{Vec2, Vec3, VecTrait, VecTraitF};
 use ::util;
+use ::vector::{Vec2, Vec3, VecTrait, VecTraitF};
 
+use std::convert::From;
 use std::ops::{Add,   AddAssign,
                Sub,   SubAssign,
                Mul,   MulAssign,
                Div,   DivAssign,
                Index, IndexMut};
-use std::convert::From;
 
 /*===============================================================================================*/
-/*------Vec4 STRUCT------------------------------------------------------------------------------*/
+/*------VEC4 STRUCT------------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
 /// The generic Vec4 struct.
 #[cfg_attr (feature = "serde_serialize", derive (Deserialize, Serialize))]
 #[derive (Copy, Clone, Debug, Default, PartialEq)]
-pub struct Vec4<V> where
-    V: Copy + Num + NumCast {
+pub struct Vec4<T> where
+    T: Copy + Num + NumCast {
 
     // Public
     /// The vector x-coordinate.
-    pub x: V,
+    pub x: T,
     /// The vector y-coordinate.
-    pub y: V,
+    pub y: T,
     /// The vector z-coordinate.
-    pub z: V,
-    /// The vector w-coordinate
-    pub w: V,
+    pub z: T,
+    /// The vector w-coordinate.
+    pub w: T,
 }
 
 // Predefined Vec4 types
@@ -60,105 +60,635 @@ pub type Vec4i = Vec4<i32>;
 pub type Vec4u = Vec4<u32>;
 
 /*===============================================================================================*/
-/*------Vec4 TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
+/*------CONSTRUCTORS-----------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V, U> From<U> for Vec4<V> where
-    V: Copy + Num + NumCast,
-    U: Copy + Num + NumCast {
+impl<T> Vec4<T> where
+    T: Copy + Num + NumCast {
 
-    fn from (value: U) -> Vec4<V> {
-
-        Vec4::new (V::from (value).unwrap (),
-                   V::from (value).unwrap (),
-                   V::from (value).unwrap (),
-                   V::from (value).unwrap ())
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V, U> From<&'a Vec2<U>> for Vec4<V> where
-    V: Copy + Num + NumCast,
-    U: Copy + Num + NumCast {
-
-    fn from (value: &Vec2<U>) -> Vec4<V> {
-
-        Vec4::new (V::from (value.x).unwrap (),
-                   V::from (value.y).unwrap (),
-                   V::zero (),
-                   V::zero ())
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V, U> From<&'a Vec3<U>> for Vec4<V> where
-    V: Copy + Num + NumCast,
-    U: Copy + Num + NumCast {
-
-    fn from (value: &Vec3<U>) -> Vec4<V> {
-
-        Vec4::new (V::from (value.x).unwrap (),
-                   V::from (value.y).unwrap (),
-                   V::from (value.z).unwrap (),
-                   V::zero ())
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V, U> From<&'a Vec4<U>> for Vec4<V> where
-    V: Copy + Num + NumCast,
-    U: Copy + Num + NumCast {
-
-    fn from (value: &Vec4<U>) -> Vec4<V> {
-
-        Vec4::new (V::from (value.x).unwrap (),
-                   V::from (value.y).unwrap (),
-                   V::from (value.z).unwrap (),
-                   V::from (value.w).unwrap ())
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> VecTrait for Vec4<V> where
-    V: Copy + Default + Num + NumCast + PartialOrd {
-
-    type ValType = V;
-
-    fn clamp (&self, min: &Self, max: &Self) -> Self {
-
-        Vec4::new (util::clamp (self.x, min.x, max.x),
-                   util::clamp (self.y, min.y, max.y),
-                   util::clamp (self.z, min.z, max.z),
-                   util::clamp (self.w, min.w, max.w))
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns the dot product of two vectors.
+    /// Returns a new `Vec4<T>` instance.
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::vector::{Vec4, VecTrait};
-    /// let vec01 = Vec4::<f32>::new (1.0, 3.0, 0.0, 5.0);
-    /// let vec02 = Vec4::<f32>::new (4.0, 9.0, 0.0, 4.0);
-    ///
-    /// let dot_product = vec01.dot (&vec02);
+    /// # use ion_math::vector::Vec4;
+    /// let vec = Vec4::<f32>::new (3, 7, 10, 9);
     /// ```
-    fn dot (&self, rhs: &Vec4<V>) -> V {
+    pub fn new<C> (x: C, y: C, z: C, w: C) -> Vec4<T> where
+        C: Copy + Num + NumCast {
 
-        (self.x * rhs.x) +
-        (self.y * rhs.y) +
-        (self.z * rhs.z) +
-        (self.w * rhs.w)
+        Vec4 {x: T::from (x).unwrap (),
+              y: T::from (y).unwrap (),
+              z: T::from (z).unwrap (),
+              w: T::from (w).unwrap ()}
     }
+}
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn lerp (start: &Self, end: &Self, percentage: f32) -> Self {
+impl<T, U> From<U> for Vec4<T> where
+    T: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: U) -> Vec4<T> {
+
+        Vec4::new (T::from (value).unwrap (),
+                   T::from (value).unwrap (),
+                   T::from (value).unwrap (),
+                   T::from (value).unwrap ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T, U> From<&'a Vec2<U>> for Vec4<T> where
+    T: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: &Vec2<U>) -> Vec4<T> {
+
+        Vec4::new (T::from (value.x).unwrap (),
+                   T::from (value.y).unwrap (),
+                   T::zero (),
+                   T::zero ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T, U> From<&'a Vec3<U>> for Vec4<T> where
+    T: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: &Vec3<U>) -> Vec4<T> {
+
+        Vec4::new (T::from (value.x).unwrap (),
+                   T::from (value.y).unwrap (),
+                   T::from (value.z).unwrap (),
+                   T::zero ())
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T, U> From<&'a Vec4<U>> for Vec4<T> where
+    T: Copy + Num + NumCast,
+    U: Copy + Num + NumCast {
+
+    fn from (value: &Vec4<U>) -> Vec4<T> {
+
+        Vec4::new (T::from (value.x).unwrap (),
+                   T::from (value.y).unwrap (),
+                   T::from (value.z).unwrap (),
+                   T::from (value.w).unwrap ())
+    }
+}
+
+/*===============================================================================================*/
+/*------OPERATORS--------------------------------------------------------------------------------*/
+/*===============================================================================================*/
+
+impl<T> Add for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn add (self, rhs: Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x + rhs.x,
+                   self.y + rhs.y,
+                   self.z + rhs.z,
+                   self.w + rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Add<&'a Vec4<T>> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn add (self, rhs: &Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x + rhs.x,
+                   self.y + rhs.y,
+                   self.z + rhs.z,
+                   self.w + rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Add<Vec4<T>> for &'a Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn add (self, rhs: Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x + rhs.x,
+                   self.y + rhs.y,
+                   self.z + rhs.z,
+                   self.w + rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, 'b, T> Add<&'a Vec4<T>> for &'b Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn add (self, rhs: &Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x + rhs.x,
+                   self.y + rhs.y,
+                   self.z + rhs.z,
+                   self.w + rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Add<T> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn add (self, rhs: T) -> Vec4<T> {
+
+        Vec4::new (self.x + rhs,
+                   self.y + rhs,
+                   self.z + rhs,
+                   self.w + rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Add<T> for &'a Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn add (self, rhs: T) -> Vec4<T> {
+
+        Vec4::new (self.x + rhs,
+                   self.y + rhs,
+                   self.z + rhs,
+                   self.w + rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> AddAssign for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    fn add_assign (&mut self, rhs: Vec4<T>) {
+
+        self.x = self.x + rhs.x;
+        self.y = self.y + rhs.y;
+        self.z = self.z + rhs.z;
+        self.w = self.w + rhs.w;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> AddAssign<T> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    fn add_assign (&mut self, rhs: T) {
+
+        self.x = self.x + rhs;
+        self.y = self.y + rhs;
+        self.z = self.z + rhs;
+        self.w = self.w + rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Sub for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn sub (self, rhs: Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x - rhs.x,
+                   self.y - rhs.y,
+                   self.z - rhs.z,
+                   self.w - rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Sub<&'a Vec4<T>> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn sub (self, rhs: &Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x - rhs.x,
+                   self.y - rhs.y,
+                   self.z - rhs.z,
+                   self.w - rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Sub<Vec4<T>> for &'a Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn sub (self, rhs: Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x - rhs.x,
+                   self.y - rhs.y,
+                   self.z - rhs.z,
+                   self.w - rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, 'b, T> Sub<&'a Vec4<T>> for &'b Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn sub (self, rhs: &Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x - rhs.x,
+                   self.y - rhs.y,
+                   self.z - rhs.z,
+                   self.w - rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Sub<T> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn sub (self, rhs: T) -> Vec4<T> {
+
+        Vec4::new (self.x - rhs,
+                   self.y - rhs,
+                   self.z - rhs,
+                   self.w - rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Sub<T> for &'a Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn sub (self, rhs: T) -> Vec4<T> {
+
+        Vec4::new (self.x - rhs,
+                   self.y - rhs,
+                   self.z - rhs,
+                   self.w - rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> SubAssign for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    fn sub_assign (&mut self, rhs: Vec4<T>) {
+
+        self.x = self.x - rhs.x;
+        self.y = self.y - rhs.y;
+        self.z = self.z - rhs.z;
+        self.w = self.w - rhs.w;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> SubAssign<T> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    fn sub_assign (&mut self, rhs: T) {
+
+        self.x = self.x - rhs;
+        self.y = self.y - rhs;
+        self.z = self.z - rhs;
+        self.w = self.w - rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Mul for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn mul (self, rhs: Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x * rhs.x,
+                   self.y * rhs.y,
+                   self.z * rhs.z,
+                   self.w * rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Mul<&'a Vec4<T>> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn mul (self, rhs: &Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x * rhs.x,
+                   self.y * rhs.y,
+                   self.z * rhs.z,
+                   self.w * rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Mul<Vec4<T>> for &'a Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn mul (self, rhs: Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x * rhs.x,
+                   self.y * rhs.y,
+                   self.z * rhs.z,
+                   self.w * rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, 'b, T> Mul<&'a Vec4<T>> for &'b Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn mul (self, rhs: &Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x * rhs.x,
+                   self.y * rhs.y,
+                   self.z * rhs.z,
+                   self.w * rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Mul<T> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn mul (self, rhs: T) -> Vec4<T> {
+
+        Vec4::new (self.x * rhs,
+                   self.y * rhs,
+                   self.z * rhs,
+                   self.w * rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Mul<T> for &'a Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn mul (self, rhs: T) -> Vec4<T> {
+
+        Vec4::new (self.x * rhs,
+                   self.y * rhs,
+                   self.z * rhs,
+                   self.w * rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> MulAssign for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    fn mul_assign (&mut self, rhs: Vec4<T>) {
+
+        self.x = self.x * rhs.x;
+        self.y = self.y * rhs.y;
+        self.z = self.z * rhs.z;
+        self.w = self.w * rhs.w;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> MulAssign<T> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    fn mul_assign (&mut self, rhs: T) {
+
+        self.x = self.x * rhs;
+        self.y = self.y * rhs;
+        self.z = self.z * rhs;
+        self.w = self.w * rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Div for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn div (self, rhs: Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x / rhs.x,
+                   self.y / rhs.y,
+                   self.z / rhs.z,
+                   self.w / rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Div<&'a Vec4<T>> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn div (self, rhs: &Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x / rhs.x,
+                   self.y / rhs.y,
+                   self.z / rhs.z,
+                   self.w / rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Div<Vec4<T>> for &'a Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn div (self, rhs: Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x / rhs.x,
+                   self.y / rhs.y,
+                   self.z / rhs.z,
+                   self.w / rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, 'b, T> Div<&'a Vec4<T>> for &'b Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn div (self, rhs: &Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (self.x / rhs.x,
+                   self.y / rhs.y,
+                   self.z / rhs.z,
+                   self.w / rhs.w)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Div<T> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn div (self, rhs: T) -> Vec4<T> {
+
+        Vec4::new (self.x / rhs,
+                   self.y / rhs,
+                   self.z / rhs,
+                   self.w / rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> Div<T> for &'a Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = Vec4<T>;
+
+    fn div (self, rhs: T) -> Vec4<T> {
+
+        Vec4::new (self.x / rhs,
+                   self.y / rhs,
+                   self.z / rhs,
+                   self.w / rhs)
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> DivAssign for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    fn div_assign (&mut self, rhs: Vec4<T>) {
+
+        self.x = self.x / rhs.x;
+        self.y = self.y / rhs.y;
+        self.z = self.z / rhs.z;
+        self.w = self.w / rhs.w;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> DivAssign<T> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    fn div_assign (&mut self, rhs: T) {
+
+        self.x = self.x / rhs;
+        self.y = self.y / rhs;
+        self.z = self.z / rhs;
+        self.w = self.w / rhs;
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> Index<u8> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    type Output = T;
+
+    fn index (&self, index: u8) -> &T {
+
+        match index {
+
+            0 => &self.x,
+            1 => &self.y,
+            2 => &self.z,
+            3 => &self.w,
+            _ => unreachable! ("Index out of range for Vec4")
+        }
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T> IndexMut<u8> for Vec4<T> where
+    T: Copy + Num + NumCast {
+
+    fn index_mut (&mut self, index: u8) -> &mut T {
+
+        match index {
+
+            0 => &mut self.x,
+            1 => &mut self.y,
+            2 => &mut self.z,
+            3 => &mut self.w,
+            _ => unreachable! ("Index out of range for Vec4")
+        }
+    }
+}
+
+/*===============================================================================================*/
+/*------TRAIT IMPLEMENTATIONS--------------------------------------------------------------------*/
+/*===============================================================================================*/
+
+impl<T> VecTrait for Vec4<T> where
+    T: Copy + Default + Num + NumCast + PartialOrd {
+
+    type ValType = T;
+
+    fn lerp (start: &Vec4<T>, end: &Vec4<T>, percentage: f32) -> Vec4<T> {
 
         Vec4::new (util::lerp (start.x, end.x, percentage),
                    util::lerp (start.y, end.y, percentage),
@@ -168,7 +698,17 @@ impl<V> VecTrait for Vec4<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn min (lhs: &Self, rhs: &Self) -> Self {
+    fn max (lhs: &Vec4<T>, rhs: &Vec4<T>) -> Vec4<T> {
+
+        Vec4::new (util::max (lhs.x, rhs.x),
+                   util::max (lhs.y, rhs.y),
+                   util::max (lhs.z, rhs.z),
+                   util::max (lhs.w, rhs.w))
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn min (lhs: &Vec4<T>, rhs: &Vec4<T>) -> Vec4<T> {
 
         Vec4::new (util::min (lhs.x, rhs.x),
                    util::min (lhs.y, rhs.y),
@@ -178,21 +718,31 @@ impl<V> VecTrait for Vec4<V> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-    fn max (lhs: &Self, rhs: &Self) -> Self {
+    fn clamp (&self, min: &Vec4<T>, max: &Vec4<T>) -> Vec4<T> {
 
-        Vec4::new (util::max (lhs.x, rhs.x),
-                   util::max (lhs.y, rhs.y),
-                   util::max (lhs.z, rhs.z),
-                   util::max (lhs.w, rhs.w))
+        Vec4::new (util::clamp (self.x, min.x, max.x),
+                   util::clamp (self.y, min.y, max.y),
+                   util::clamp (self.z, min.z, max.z),
+                   util::clamp (self.w, min.w, max.w))
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    fn dot (&self, rhs: &Vec4<T>) -> T {
+
+        (self.x * rhs.x) +
+        (self.y * rhs.y) +
+        (self.z * rhs.z) +
+        (self.w * rhs.w)
     }
 }
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<V> VecTraitF for Vec4<V> where
-    V: Default + Float {
+impl<T> VecTraitF for Vec4<T> where
+    T: Default + Float {
 
-    type ValTypeF = V;
+    type ValTypeF = T;
 
     /// Returns the distance between two vectors.
     ///
@@ -204,7 +754,7 @@ impl<V> VecTraitF for Vec4<V> where
     ///
     /// let distance = vec01.distance (&vec02);
     /// ```
-    fn distance<'a> (&'a self, rhs: &'a Vec4<V>) -> V {
+    fn distance (&self, rhs: &Vec4<T>) -> T {
         (self - rhs).length ()
     }
 
@@ -218,7 +768,7 @@ impl<V> VecTraitF for Vec4<V> where
     /// let vec = Vec4::<f32>::new (1.0, 3.0, 0.0, 6.0);
     /// let vec_length = vec.length ();
     /// ```
-    fn length (&self) -> V {
+    fn length (&self) -> T {
 
         (self.x * self.x +
          self.y * self.y +
@@ -236,11 +786,11 @@ impl<V> VecTraitF for Vec4<V> where
     /// let vec = Vec4::<f32>::new (3.0, 9.0, 0.0, 4.0);
     /// let vec_normalized = vec.normalize ();
     /// ```
-    fn normalize (&self) -> Vec4<V> {
+    fn normalize (&self) -> Vec4<T> {
 
         let length = self.length ();
 
-        if length != V::zero () {
+        if length != T::zero () {
 
             return Vec4::new (self.x / length,
                               self.y / length,
@@ -248,570 +798,16 @@ impl<V> VecTraitF for Vec4<V> where
                               self.w / length);
         }
 
-        Vec4::default ()
+        Vec4::zero ()
     }
 }
 
 /*===============================================================================================*/
-/*------Vec4 OPERATORS---------------------------------------------------------------------------*/
+/*------PUBLIC STATIC METHODS--------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<V> Add for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn add (self, rhs: Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x + rhs.x,
-                   self.y + rhs.y,
-                   self.z + rhs.z,
-                   self.w + rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Add<&'a Vec4<V>> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn add (self, rhs: &Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x + rhs.x,
-                   self.y + rhs.y,
-                   self.z + rhs.z,
-                   self.w + rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Add<Vec4<V>> for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn add (self, rhs: Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x + rhs.x,
-                   self.y + rhs.y,
-                   self.z + rhs.z,
-                   self.w + rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Add for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn add (self, rhs: &Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x + rhs.x,
-                   self.y + rhs.y,
-                   self.z + rhs.z,
-                   self.w + rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Add<V> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn add (self, rhs: V) -> Vec4<V> {
-
-        Vec4::new (self.x + rhs,
-                   self.y + rhs,
-                   self.z + rhs,
-                   self.w + rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Add<V> for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn add (self, rhs: V) -> Vec4<V> {
-
-        Vec4::new (self.x + rhs,
-                   self.y + rhs,
-                   self.z + rhs,
-                   self.w + rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> AddAssign for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    fn add_assign (&mut self, rhs: Vec4<V>) {
-
-        self.x = self.x + rhs.x;
-        self.y = self.y + rhs.y;
-        self.z = self.z + rhs.z;
-        self.w = self.w + rhs.w;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> AddAssign<V> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    fn add_assign (&mut self, rhs: V) {
-
-        self.x = self.x + rhs;
-        self.y = self.y + rhs;
-        self.z = self.z + rhs;
-        self.w = self.w + rhs;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Sub for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn sub (self, rhs: Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x - rhs.x,
-                   self.y - rhs.y,
-                   self.z - rhs.z,
-                   self.w - rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Sub<&'a Vec4<V>> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn sub (self, rhs: &Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x - rhs.x,
-                   self.y - rhs.y,
-                   self.z - rhs.z,
-                   self.w - rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Sub<Vec4<V>> for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn sub (self, rhs: Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x - rhs.x,
-                   self.y - rhs.y,
-                   self.z - rhs.z,
-                   self.w - rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Sub for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn sub (self, rhs: &Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x - rhs.x,
-                   self.y - rhs.y,
-                   self.z - rhs.z,
-                   self.w - rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Sub<V> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn sub (self, rhs: V) -> Vec4<V> {
-
-        Vec4::new (self.x - rhs,
-                   self.y - rhs,
-                   self.z - rhs,
-                   self.w - rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Sub<V> for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn sub (self, rhs: V) -> Vec4<V> {
-
-        Vec4::new (self.x - rhs,
-                   self.y - rhs,
-                   self.z - rhs,
-                   self.w - rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> SubAssign for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    fn sub_assign (&mut self, rhs: Vec4<V>) {
-
-        self.x = self.x - rhs.x;
-        self.y = self.y - rhs.y;
-        self.z = self.z - rhs.z;
-        self.w = self.w - rhs.w;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> SubAssign<V> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    fn sub_assign (&mut self, rhs: V) {
-
-        self.x = self.x - rhs;
-        self.y = self.y - rhs;
-        self.z = self.z - rhs;
-        self.w = self.w - rhs;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Mul for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn mul (self, rhs: Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x * rhs.x,
-                   self.y * rhs.y,
-                   self.z * rhs.z,
-                   self.w * rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Mul<&'a Vec4<V>> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn mul (self, rhs: &Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x * rhs.x,
-                   self.y * rhs.y,
-                   self.z * rhs.z,
-                   self.w * rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Mul<Vec4<V>> for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn mul (self, rhs: Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x * rhs.x,
-                   self.y * rhs.y,
-                   self.z * rhs.z,
-                   self.w * rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Mul for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn mul (self, rhs: &Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x * rhs.x,
-                   self.y * rhs.y,
-                   self.z * rhs.z,
-                   self.w * rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Mul<V> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn mul (self, rhs: V) -> Vec4<V> {
-
-        Vec4::new (self.x * rhs,
-                   self.y * rhs,
-                   self.z * rhs,
-                   self.w * rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Mul<V> for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn mul (self, rhs: V) -> Vec4<V> {
-
-        Vec4::new (self.x * rhs,
-                   self.y * rhs,
-                   self.z * rhs,
-                   self.w * rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> MulAssign for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    fn mul_assign (&mut self, rhs: Vec4<V>) {
-
-        self.x = self.x * rhs.x;
-        self.y = self.y * rhs.y;
-        self.z = self.z * rhs.z;
-        self.w = self.w * rhs.w;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> MulAssign<V> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    fn mul_assign (&mut self, rhs: V) {
-
-        self.x = self.x * rhs;
-        self.y = self.y * rhs;
-        self.z = self.z * rhs;
-        self.w = self.w * rhs;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Div for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn div (self, rhs: Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x / rhs.x,
-                   self.y / rhs.y,
-                   self.z / rhs.z,
-                   self.w / rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Div<&'a Vec4<V>> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn div (self, rhs: &Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x / rhs.x,
-                   self.y / rhs.y,
-                   self.z / rhs.z,
-                   self.w / rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Div<Vec4<V>> for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn div (self, rhs: Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x / rhs.x,
-                   self.y / rhs.y,
-                   self.z / rhs.z,
-                   self.w / rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Div for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn div (self, rhs: &Vec4<V>) -> Vec4<V> {
-
-        Vec4::new (self.x / rhs.x,
-                   self.y / rhs.y,
-                   self.z / rhs.z,
-                   self.w / rhs.w)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Div<V> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn div (self, rhs: V) -> Vec4<V> {
-
-        Vec4::new (self.x / rhs,
-                   self.y / rhs,
-                   self.z / rhs,
-                   self.w / rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<'a, V> Div<V> for &'a Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = Vec4<V>;
-
-    fn div (self, rhs: V) -> Vec4<V> {
-
-        Vec4::new (self.x / rhs,
-                   self.y / rhs,
-                   self.z / rhs,
-                   self.w / rhs)
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> DivAssign for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    fn div_assign (&mut self, rhs: Vec4<V>) {
-
-        self.x = self.x / rhs.x;
-        self.y = self.y / rhs.y;
-        self.z = self.z / rhs.z;
-        self.w = self.w / rhs.w;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> DivAssign<V> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    fn div_assign (&mut self, rhs: V) {
-
-        self.x = self.x / rhs;
-        self.y = self.y / rhs;
-        self.z = self.z / rhs;
-        self.w = self.w / rhs;
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> Index<u8> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    type Output = V;
-
-    fn index (&self, index: u8) -> &V {
-
-        match index {
-
-            0 => &self.x,
-            1 => &self.y,
-            2 => &self.z,
-            3 => &self.w,
-            _ => unreachable! ("Index out of range for Vec4")
-        }
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<V> IndexMut<u8> for Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    fn index_mut (&mut self, index: u8) -> &mut V {
-
-        match index {
-
-            0 => &mut self.x,
-            1 => &mut self.y,
-            2 => &mut self.z,
-            3 => &mut self.w,
-            _ => unreachable! ("Index out of range for Vec4")
-        }
-    }
-}
-
-/*===============================================================================================*/
-/*------Vec4 PUBLIC METHODS----------------------------------------------------------------------*/
-/*===============================================================================================*/
-
-impl<V> Vec4<V> where
-    V: Copy + Num + NumCast {
-
-    /// Returns a new `Vec4<V>` instance.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec4;
-    /// let vec = Vec4::<f32>::new (3, 7, 10, 9);
-    /// ```
-    pub fn new<C> (x: C, y: C, z: C, w: C) -> Vec4<V> where
-        C: Num + NumCast {
-
-        Vec4 {x: V::from (x).unwrap (),
-              y: V::from (y).unwrap (),
-              z: V::from (z).unwrap (),
-              w: V::from (w).unwrap ()}
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
+impl<T> Vec4<T> where
+    T: Copy + Num + NumCast {
 
     /// Returns a `Vec4<V>` with a value of (0, 1, 0, 0).
     ///
@@ -820,12 +816,12 @@ impl<V> Vec4<V> where
     /// # use ion_math::vector::Vec4;
     /// let vec = Vec4::<f32>::up ();
     /// ```
-    pub fn up () -> Vec4<V> {
+    pub fn up () -> Vec4<T> {
 
-        Vec4::new (V::zero (),
-                   V::one  (),
-                   V::zero (),
-                   V::zero ())
+        Vec4::new (T::zero (),
+                   T::one  (),
+                   T::zero (),
+                   T::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -837,29 +833,12 @@ impl<V> Vec4<V> where
     /// # use ion_math::vector::Vec4;
     /// let vec = Vec4::<f32>::down ();
     /// ```
-    pub fn down () -> Vec4<V> {
+    pub fn down () -> Vec4<T> {
 
-        Vec4::new (V::zero (),
-                   V::from (-1).unwrap (),
-                   V::zero (),
-                   V::zero ())
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns a `Vec4<V>` with a value of (0, 1, 0, 0).
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::vector::Vec4;
-    /// let vec = Vec4::<f32>::right ();
-    /// ```
-    pub fn right () -> Vec4<V> {
-
-        Vec4::new (V::one  (),
-                   V::zero (),
-                   V::zero (),
-                   V::zero ())
+        Vec4::new (T::zero (),
+                   T::from (-1).unwrap (),
+                   T::zero (),
+                   T::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -871,12 +850,29 @@ impl<V> Vec4<V> where
     /// # use ion_math::vector::Vec4;
     /// let vec = Vec4::<f32>::left ();
     /// ```
-    pub fn left () -> Vec4<V> {
+    pub fn left () -> Vec4<T> {
 
-        Vec4::new (V::from (-1).unwrap (),
-                   V::zero (),
-                   V::zero (),
-                   V::zero ())
+        Vec4::new (T::from (-1).unwrap (),
+                   T::zero (),
+                   T::zero (),
+                   T::zero ())
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns a `Vec4<V>` with a value of (0, 1, 0, 0).
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::vector::Vec4;
+    /// let vec = Vec4::<f32>::right ();
+    /// ```
+    pub fn right () -> Vec4<T> {
+
+        Vec4::new (T::one  (),
+                   T::zero (),
+                   T::zero (),
+                   T::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -888,12 +884,12 @@ impl<V> Vec4<V> where
     /// # use ion_math::vector::Vec4;
     /// let vec = Vec4::<f32>::forward ();
     /// ```
-    pub fn forward () -> Vec4<V> {
+    pub fn forward () -> Vec4<T> {
 
-        Vec4::new (V::zero (),
-                   V::zero (),
-                   V::one  (),
-                   V::zero ())
+        Vec4::new (T::zero (),
+                   T::zero (),
+                   T::one  (),
+                   T::zero ())
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -905,11 +901,24 @@ impl<V> Vec4<V> where
     /// # use ion_math::vector::Vec4;
     /// let vec = Vec4::<f32>::back ();
     /// ```
-    pub fn back () -> Vec4<V> {
+    pub fn back () -> Vec4<T> {
 
-        Vec4::new (V::zero (),
-                   V::zero (),
-                   V::from (-1).unwrap (),
-                   V::zero ())
+        Vec4::new (T::zero (),
+                   T::zero (),
+                   T::from (-1).unwrap (),
+                   T::zero ())
+    }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+    /// Returns a `Vec4<T>` with a value of (0, 0, 0, 0).
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::vector::Vec4;
+    /// let vec = Vec4::<f32>::zero ();
+    /// ```
+    pub fn zero () -> Vec4<T> {
+        Vec4::from (T::zero ())
     }
 }
