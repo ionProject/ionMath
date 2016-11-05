@@ -27,7 +27,7 @@ use std::convert::From;
 use std::ops::{AddAssign, Index, IndexMut, Mul};
 
 /*===============================================================================================*/
-/*------MAT4 STRUCT------------------------------------------------------------------------------*/
+/*------MAT3 STRUCT------------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
 /// The generic `Mat4` struct.
@@ -51,13 +51,44 @@ pub type Mat4i = Mat4<i32>;
 pub type Mat4u = Mat4<u32>;
 
 /*===============================================================================================*/
-/*------Mat4 TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
+/*------CONSTRUCTORS-----------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<T> From<T> for Mat4<T> where
+impl<T> Mat4<T> where
     T: Copy + Num + NumCast {
 
-    fn from (value: T) -> Mat4<T> {
+    /// Returns a new `Mat4` instance.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::matrix::Mat4;
+    /// let mat = Mat4::<f32>::new (1,  2,  3,  4,
+    ///                             5,  6,  7,  8,
+    ///                             9,  10, 11, 12,
+    ///                             13, 14, 15, 16);
+    /// ```
+    pub fn new<C> (m11: C, m12: C, m13: C, m14: C,
+                   m21: C, m22: C, m23: C, m24: C,
+                   m31: C, m32: C, m33: C, m34: C,
+                   m41: C, m42: C, m43: C, m44: C,) -> Mat4<T> where
+        C: Copy + Num + NumCast {
+
+        Mat4 {
+
+            array: [Vec4::new (m11, m12, m13, m14),
+                    Vec4::new (m21, m22, m23, m24),
+                    Vec4::new (m31, m32, m33, m34),
+                    Vec4::new (m41, m42, m43, m44)]}
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T, C> From<C> for Mat4<T> where
+    T: Copy + Num + NumCast,
+    C: Copy + Num + NumCast {
+
+    fn from (value: C) -> Mat4<T> {
 
         Mat4::new (value, value, value, value,
                    value, value, value, value,
@@ -68,41 +99,21 @@ impl<T> From<T> for Mat4<T> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<'a, T> From<[&'a Vec4<T>; 4]> for Mat4<T> where
-    T: Copy + Num + NumCast {
+impl<'a, T, C> From<&'a Vec4<C>> for Mat4<T> where
+    T: Copy + Num + NumCast,
+    C: Copy + Num + NumCast {
 
-    fn from (value: [&Vec4<T>; 4]) -> Mat4<T> {
+    fn from (value: &Vec4<C>) -> Mat4<T> {
 
-        Mat4 {array: [*value[0],
-                      *value[1],
-                      *value[2],
-                      *value[3]]}
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<T> MatTrait for Mat4<T> where
-    T: Copy + Default + Num + NumCast {
-
-    /// Returns a new identity matrix.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::matrix::{Mat4, MatTrait};
-    /// let mat = Mat4::<f32>::identity ();
-    /// ```
-    fn identity () -> Mat4<T> {
-
-        Mat4::new (T::one  (), T::zero (), T::zero (), T::zero (),
-                   T::zero (), T::one  (), T::zero (), T::zero (),
-                   T::zero (), T::zero (), T::one  (), T::zero (),
-                   T::zero (), T::zero (), T::zero (), T::one  ())
+        Mat4::new (value.x, value.y, value.z, value.w,
+                   value.x, value.y, value.z, value.w,
+                   value.x, value.y, value.z, value.w,
+                   value.x, value.y, value.z, value.w)
     }
 }
 
 /*===============================================================================================*/
-/*------MAT4 OPERATORS---------------------------------------------------------------------------*/
+/*------OPERATORS--------------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
 impl<T> Mul for Mat4<T> where
@@ -112,13 +123,13 @@ impl<T> Mul for Mat4<T> where
 
     fn mul (self, rhs: Mat4<T>) -> Mat4<T> {
 
-        let mut m = Mat4::zero ();
+        let mut m = Mat4::from (0);
 
-        for row in 0..3 {
+        for row in 0..4 {
 
-            for col in 0..3 {
+            for col in 0..4 {
 
-                for inner in 0..3 {
+                for inner in 0..4 {
                     m[row][col] += self[row][inner] * rhs[inner][col]
                 }
             }
@@ -137,13 +148,13 @@ impl<'a, T> Mul<&'a Mat4<T>> for Mat4<T> where
 
     fn mul (self, rhs: &Mat4<T>) -> Mat4<T> {
 
-        let mut m = Mat4::zero ();
+        let mut m = Mat4::from (0);
 
-        for row in 0..3 {
+        for row in 0..4 {
 
-            for col in 0..3 {
+            for col in 0..4 {
 
-                for inner in 0..3 {
+                for inner in 0..4 {
                     m[row][col] += self[row][inner] * rhs[inner][col]
                 }
             }
@@ -162,13 +173,13 @@ impl<'a, T> Mul<Mat4<T>> for &'a Mat4<T> where
 
     fn mul (self, rhs: Mat4<T>) -> Mat4<T> {
 
-        let mut m = Mat4::zero ();
+        let mut m = Mat4::from (0);
 
-        for row in 0..3 {
+        for row in 0..4 {
 
-            for col in 0..3 {
+            for col in 0..4 {
 
-                for inner in 0..3 {
+                for inner in 0..4 {
                     m[row][col] += self[row][inner] * rhs[inner][col]
                 }
             }
@@ -180,20 +191,20 @@ impl<'a, T> Mul<Mat4<T>> for &'a Mat4<T> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<'a, T> Mul for &'a Mat4<T> where
+impl<'a, 'b, T> Mul<&'a Mat4<T>> for &'a Mat4<T> where
     T: AddAssign + Copy + Num + NumCast {
 
     type Output = Mat4<T>;
 
     fn mul (self, rhs: &Mat4<T>) -> Mat4<T> {
 
-        let mut m = Mat4::zero ();
+        let mut m = Mat4::from (0);
 
-        for row in 0..3 {
+        for row in 0..4 {
 
-            for col in 0..3 {
+            for col in 0..4 {
 
-                for inner in 0..3 {
+                for inner in 0..4 {
                     m[row][col] += self[row][inner] * rhs[inner][col]
                 }
             }
@@ -217,6 +228,7 @@ impl<T> Index<u8> for Mat4<T> where
             0 => &self.array[0],
             1 => &self.array[1],
             2 => &self.array[2],
+            3 => &self.array[3],
             _ => unreachable! ("Index out of range for Mat4")
         }
     }
@@ -234,50 +246,31 @@ impl<T> IndexMut<u8> for Mat4<T> where
             0 => &mut self.array[0],
             1 => &mut self.array[1],
             2 => &mut self.array[2],
+            3 => &mut self.array[3],
             _ => unreachable! ("Index out of range for Mat4")
         }
     }
 }
 
 /*===============================================================================================*/
-/*------MAT4 PUBLIC METHODS----------------------------------------------------------------------*/
+/*------TRAIT IMPLEMENTATIONS--------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<T> Mat4<T> where
-    T: Copy + Num + NumCast {
+impl<T> MatTrait for Mat4<T> where
+    T: Copy + Default + Num + NumCast {
 
-    /// Returns a new `Mat4` instance.
+    /// Returns a new identity matrix.
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::matrix::Mat4;
-    /// let mat = Mat4::<f32>::new (1,  2,  3,  4,
-    ///                             5,  6,  7,  8,
-    ///                             9,  10, 11, 12,
-    ///                             13, 14, 15, 16);
+    /// # use ion_math::matrix::{Mat4, MatTrait};
+    /// let mat = Mat4::<f32>::identity ();
     /// ```
-    pub fn new<C> (m11: C, m12: C, m13: C, m14: C,
-                   m21: C, m22: C, m23: C, m24: C,
-                   m31: C, m32: C, m33: C, m34: C,
-                   m41: C, m42: C, m43: C, m44: C,) -> Mat4<T> where
-        C: Num + NumCast {
+    fn identity () -> Mat4<T> {
 
-        Mat4 {array: [Vec4::new (T::from (m11).unwrap (), T::from (m12).unwrap (), T::from (m13).unwrap (), T::from (m14).unwrap ()),
-                      Vec4::new (T::from (m21).unwrap (), T::from (m22).unwrap (), T::from (m23).unwrap (), T::from (m24).unwrap ()),
-                      Vec4::new (T::from (m31).unwrap (), T::from (m32).unwrap (), T::from (m33).unwrap (), T::from (m34).unwrap ()),
-                      Vec4::new (T::from (m41).unwrap (), T::from (m42).unwrap (), T::from (m43).unwrap (), T::from (m44).unwrap ())]}
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns a matrix with all zeros.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::matrix::Mat4;
-    /// let mat = Mat4::<f32>::zero ();
-    /// ```
-    pub fn zero () -> Mat4<T> {
-        Mat4::from (T::zero ())
+        Mat4::new (1, 0, 0, 0,
+                   0, 1, 0, 0,
+                   0, 0, 1, 0,
+                   0, 0, 0, 1)
     }
 }
