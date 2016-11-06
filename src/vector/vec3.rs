@@ -91,9 +91,9 @@ impl<T, U> From<U> for Vec3<T> where
 
     fn from (value: U) -> Vec3<T> {
 
-        Vec3::new (T::from (value).unwrap (),
-                   T::from (value).unwrap (),
-                   T::from (value).unwrap ())
+        Vec3::new (value,
+                   value,
+                   value)
     }
 }
 
@@ -105,9 +105,9 @@ impl<'a, T, U> From<&'a Vec2<U>> for Vec3<T> where
 
     fn from (value: &Vec2<U>) -> Vec3<T> {
 
-        Vec3::new (T::from (value.x).unwrap (),
-                   T::from (value.y).unwrap (),
-                   T::zero ())
+        Vec3::new (value.x,
+                   value.y,
+                   U::zero ())
     }
 }
 
@@ -119,9 +119,9 @@ impl<'a, T, U> From<&'a Vec3<U>> for Vec3<T> where
 
     fn from (value: &Vec3<U>) -> Vec3<T> {
 
-        Vec3::new (T::from (value.x).unwrap (),
-                   T::from (value.y).unwrap (),
-                   T::from (value.z).unwrap ())
+        Vec3::new (value.x,
+                   value.y,
+                   value.z)
     }
 }
 
@@ -133,9 +133,9 @@ impl<'a, T, U> From<&'a Vec4<U>> for Vec3<T> where
 
     fn from (value: &Vec4<U>) -> Vec3<T> {
 
-        Vec3::new (T::from (value.x).unwrap (),
-                   T::from (value.y).unwrap (),
-                   T::from (value.z).unwrap ())
+        Vec3::new (value.x,
+                   value.y,
+                   value.z)
     }
 }
 
@@ -793,10 +793,7 @@ impl<T> Vec3<T> where
     /// let vec = Vec3::<f32>::up ();
     /// ```
     pub fn up () -> Vec3<T> {
-
-        Vec3::new (T::zero (),
-                   T::one  (),
-                   T::zero ())
+        Vec3::new (0, 1, 0)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -809,10 +806,7 @@ impl<T> Vec3<T> where
     /// let vec = Vec3::<f32>::down ();
     /// ```
     pub fn down () -> Vec3<T> {
-
-        Vec3::new (T::zero (),
-                   T::from (-1).unwrap (),
-                   T::zero ())
+        Vec3::new (0, -1, 0)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -825,10 +819,7 @@ impl<T> Vec3<T> where
     /// let vec = Vec3::<f32>::left ();
     /// ```
     pub fn left () -> Vec3<T> {
-
-        Vec3::new (T::from (-1).unwrap (),
-                   T::zero (),
-                   T::zero ())
+        Vec3::new (-1, 0, 0)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -841,10 +832,7 @@ impl<T> Vec3<T> where
     /// let vec = Vec3::<f32>::right ();
     /// ```
     pub fn right () -> Vec3<T> {
-
-        Vec3::new (T::one  (),
-                   T::zero (),
-                   T::zero ())
+        Vec3::new (1, 0, 0)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -857,10 +845,7 @@ impl<T> Vec3<T> where
     /// let vec = Vec3::<f32>::forward ();
     /// ```
     pub fn forward () -> Vec3<T> {
-
-        Vec3::new (T::zero (),
-                   T::zero (),
-                   T::one  ())
+        Vec3::new (0, 0, 1)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -873,10 +858,7 @@ impl<T> Vec3<T> where
     /// let vec = Vec3::<f32>::back ();
     /// ```
     pub fn back () -> Vec3<T> {
-
-        Vec3::new (T::zero (),
-                   T::zero (),
-                   T::from (-1).unwrap ())
+        Vec3::new (0, 0, -1)
     }
 
 /*-----------------------------------------------------------------------------------------------*/
@@ -889,6 +871,6 @@ impl<T> Vec3<T> where
     /// let vec = Vec3::<f32>::zero ();
     /// ```
     pub fn zero () -> Vec3<T> {
-        Vec3::from (T::zero ())
+        Vec3::from (0)
     }
 }

@@ -51,13 +51,42 @@ pub type Mat3i = Mat3<i32>;
 pub type Mat3u = Mat3<u32>;
 
 /*===============================================================================================*/
-/*------MAT3 TRAIT IMPLEMENTATIONS---------------------------------------------------------------*/
+/*------CONSTRUCTORS-----------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<T> From<T> for Mat3<T> where
-    T: Copy + Num + NumCast, {
+impl<T> Mat3<T> where
+    T: Copy + Num + NumCast {
 
-    fn from (value: T) -> Mat3<T> {
+    /// Returns a new `Mat3` instance.
+    ///
+    /// # Examples
+    /// ```
+    /// # use ion_math::matrix::Mat3;
+    /// let mat = Mat3::<f32>::new (1, 2, 3,
+    ///                             4, 5, 6,
+    ///                             7, 8, 9);
+    /// ```
+    pub fn new<C>(m11: C, m12: C, m13: C,
+                  m21: C, m22: C, m23: C,
+                  m31: C, m32: C, m33: C) -> Mat3<T> where
+        C: Copy + Num + NumCast {
+
+        Mat3 {
+
+            array: [Vec3::new (m11, m12, m13),
+                    Vec3::new (m21, m22, m23),
+                    Vec3::new (m31, m32, m33)]
+        }
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<T, C> From<C> for Mat3<T> where
+    T: Copy + Num + NumCast,
+    C: Copy + Num + NumCast {
+
+    fn from (value: C) -> Mat3<T> {
 
         Mat3::new (value, value, value,
                    value, value, value,
@@ -67,39 +96,20 @@ impl<T> From<T> for Mat3<T> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<'a, T> From<[&'a Vec3<T>; 3]> for Mat3<T> where
-    T: Copy + Num + NumCast {
+impl<'a, T, C> From<&'a Vec3<C>> for Mat3<T> where
+    T: Copy + Num + NumCast,
+    C: Copy + Num + NumCast {
 
-    fn from (value: [&Vec3<T>; 3]) -> Mat3<T> {
+    fn from (value: &Vec3<C>) -> Mat3<T> {
 
-        Mat3 {array: [*value[0],
-                      *value[1],
-                      *value[2]]}
-    }
-}
-
-/*-----------------------------------------------------------------------------------------------*/
-
-impl<T> MatTrait for Mat3<T> where
-    T: Copy + Default + Num + NumCast {
-
-    /// Returns a new identity matrix.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::matrix::{Mat3, MatTrait};
-    /// let mat = Mat3::<f32>::identity ();
-    /// ```
-    fn identity () -> Mat3<T> {
-
-        Mat3::new (T::one  (), T::zero (), T::zero (),
-                   T::zero (), T::one  (), T::zero (),
-                   T::zero (), T::zero (), T::one  ())
+        Mat3::new (value.x, value.y, value.z,
+                   value.x, value.y, value.z,
+                   value.x, value.y, value.z)
     }
 }
 
 /*===============================================================================================*/
-/*------MAT3 OPERATORS---------------------------------------------------------------------------*/
+/*------OPERATORS--------------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
 impl<T> Mul for Mat3<T> where
@@ -109,7 +119,7 @@ impl<T> Mul for Mat3<T> where
 
     fn mul (self, rhs: Mat3<T>) -> Mat3<T> {
 
-        let mut m = Mat3::zero ();
+        let mut m = Mat3::from (0);
 
         for row in 0..3 {
 
@@ -134,7 +144,7 @@ impl<'a, T> Mul<&'a Mat3<T>> for Mat3<T> where
 
     fn mul (self, rhs: &Mat3<T>) -> Mat3<T> {
 
-        let mut m = Mat3::zero ();
+        let mut m = Mat3::from (0);
 
         for row in 0..3 {
 
@@ -159,7 +169,7 @@ impl<'a, T> Mul<Mat3<T>> for &'a Mat3<T> where
 
     fn mul (self, rhs: Mat3<T>) -> Mat3<T> {
 
-        let mut m = Mat3::zero ();
+        let mut m = Mat3::from (0);
 
         for row in 0..3 {
 
@@ -177,14 +187,14 @@ impl<'a, T> Mul<Mat3<T>> for &'a Mat3<T> where
 
 /*-----------------------------------------------------------------------------------------------*/
 
-impl<'a, T> Mul for &'a Mat3<T> where
+impl<'a, 'b, T> Mul<&'a Mat3<T>> for &'a Mat3<T> where
     T: AddAssign + Copy + Num + NumCast {
 
     type Output = Mat3<T>;
 
     fn mul (self, rhs: &Mat3<T>) -> Mat3<T> {
 
-        let mut m = Mat3::zero ();
+        let mut m = Mat3::from (0);
 
         for row in 0..3 {
 
@@ -237,41 +247,23 @@ impl<T> IndexMut<u8> for Mat3<T> where
 }
 
 /*===============================================================================================*/
-/*------MAT3 PUBLIC METHODS----------------------------------------------------------------------*/
+/*------TRAIT IMPLEMENTATIONS--------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<T> Mat3<T> where
-    T: Copy + Num + NumCast {
+impl<T> MatTrait for Mat3<T> where
+    T: Copy + Default + Num + NumCast {
 
-    /// Returns a new `Mat3` instance.
+    /// Returns a new identity matrix.
     ///
     /// # Examples
     /// ```
-    /// # use ion_math::matrix::Mat3;
-    /// let mat = Mat3::<f32>::new (1, 2, 3,
-    ///                             4, 5, 6,
-    ///                             7, 8, 9);
+    /// # use ion_math::matrix::{Mat3, MatTrait};
+    /// let mat = Mat3::<f32>::identity ();
     /// ```
-    pub fn new<C> (m11: C, m12: C, m13: C,
-                   m21: C, m22: C, m23: C,
-                   m31: C, m32: C, m33: C) -> Mat3<T> where
-        C: Num + NumCast {
+    fn identity () -> Mat3<T> {
 
-        Mat3 {array: [Vec3::new (T::from (m11).unwrap (), T::from (m12).unwrap (), T::from (m13).unwrap ()),
-                      Vec3::new (T::from (m21).unwrap (), T::from (m22).unwrap (), T::from (m23).unwrap ()),
-                      Vec3::new (T::from (m31).unwrap (), T::from (m32).unwrap (), T::from (m33).unwrap ())]}
-    }
-
-/*-----------------------------------------------------------------------------------------------*/
-
-    /// Returns a matrix with all zeros.
-    ///
-    /// # Examples
-    /// ```
-    /// # use ion_math::matrix::Mat3;
-    /// let mat = Mat3::<f32>::zero ();
-    /// ```
-    pub fn zero () -> Mat3<T> {
-        Mat3::from (T::zero ())
+        Mat3::new (1, 0, 0,
+                   0, 1, 0,
+                   0, 0, 1)
     }
 }

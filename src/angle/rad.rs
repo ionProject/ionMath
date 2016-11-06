@@ -31,32 +31,20 @@ use std::convert::From;
 /// Stores a value in Radians.
 #[cfg_attr (feature = "serde_serialize", derive (Deserialize, Serialize))]
 #[derive (Copy, Clone, Debug, Default, PartialEq, PartialOrd)]
-pub struct Rad<V> where
-    V: Copy + Float + NumCast {
+pub struct Rad<T> where
+    T: Copy + Float + NumCast {
 
     // Public
     /// The value of the radian.
-    pub value: V,
+    pub value: T,
 }
 
 /*===============================================================================================*/
-/*------RAD TRAIT IMPLEMENTATIONS----------------------------------------------------------------*/
+/*------CONSTRUCTORS-----------------------------------------------------------------------------*/
 /*===============================================================================================*/
 
-impl<'a, V> From<&'a Deg<V>> for Rad<V> where
-    V: Copy + Float + NumCast {
-
-    fn from (deg: &Deg<V>) -> Rad<V> {
-        Rad::new (deg.value * V::from (0.017453).unwrap ())
-    }
-}
-
-/*===============================================================================================*/
-/*------RAD PUBLIC METHODS-----------------------------------------------------------------------*/
-/*===============================================================================================*/
-
-impl<V> Rad<V> where
-    V: Copy + Float + NumCast {
+impl<T> Rad<T> where
+    T: Copy + Float + NumCast {
 
     /// Returns a new `Rad` instance.
     ///
@@ -65,9 +53,19 @@ impl<V> Rad<V> where
     /// # use ion_math::angle::{Deg, Rad};
     /// let rad = Rad::<f32>::new (2.641);
     /// ```
-    pub fn new<C> (value: C) -> Rad<V> where
+    pub fn new<C> (value: C) -> Rad<T> where
         C: Num + NumCast {
 
-        Rad {value: V::from (value).unwrap ()}
+        Rad {value: T::from (value).unwrap ()}
+    }
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+impl<'a, T> From<&'a Deg<T>> for Rad<T> where
+    T: Copy + Float + NumCast {
+
+    fn from (deg: &Deg<T>) -> Rad<T> {
+        Rad::new (deg.value * T::from (0.017453).unwrap ())
     }
 }
