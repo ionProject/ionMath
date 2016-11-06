@@ -19,8 +19,7 @@
 /*===============================================================================================*/
 
 /// Implemented by all colour types.
-pub trait ColourTrait:
-    Default {
+pub trait ColourTrait {
 
     /// Returns the colour black.
     fn black () -> Self;
