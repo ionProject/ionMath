@@ -66,6 +66,7 @@ impl<T> Mat3<T> where
     ///                             4, 5, 6,
     ///                             7, 8, 9);
     /// ```
+    #[cfg_attr (feature = "cargo-clippy", allow (too_many_arguments))]
     pub fn new<C>(m11: C, m12: C, m13: C,
                   m21: C, m22: C, m23: C,
                   m31: C, m32: C, m33: C) -> Mat3<T> where
@@ -117,6 +118,7 @@ impl<T> Mul for Mat3<T> where
 
     type Output = Mat3<T>;
 
+    #[cfg_attr (feature = "cargo-clippy", allow (needless_range_loop))]
     fn mul (self, rhs: Mat3<T>) -> Mat3<T> {
 
         let mut m = Mat3::from (0);
@@ -142,6 +144,7 @@ impl<'a, T> Mul<&'a Mat3<T>> for Mat3<T> where
 
     type Output = Mat3<T>;
 
+    #[cfg_attr (feature = "cargo-clippy", allow (needless_range_loop))]
     fn mul (self, rhs: &Mat3<T>) -> Mat3<T> {
 
         let mut m = Mat3::from (0);
@@ -167,6 +170,7 @@ impl<'a, T> Mul<Mat3<T>> for &'a Mat3<T> where
 
     type Output = Mat3<T>;
 
+    #[cfg_attr (feature = "cargo-clippy", allow (needless_range_loop))]
     fn mul (self, rhs: Mat3<T>) -> Mat3<T> {
 
         let mut m = Mat3::from (0);
@@ -192,6 +196,7 @@ impl<'a, 'b, T> Mul<&'a Mat3<T>> for &'a Mat3<T> where
 
     type Output = Mat3<T>;
 
+    #[cfg_attr (feature = "cargo-clippy", allow (needless_range_loop))]
     fn mul (self, rhs: &Mat3<T>) -> Mat3<T> {
 
         let mut m = Mat3::from (0);
